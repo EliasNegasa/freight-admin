@@ -1,24 +1,31 @@
 import React, { Component } from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
-import { paginate } from "./../utils/paginate";
-import { getAccounts } from "./../services/accountService";
-import { StyledButton } from "./styled-components/button";
+import { paginate } from "../../utils/paginate";
+import { getAccounts } from "../../services/accountService";
+import { StyledButton } from "../styled-components/button";
 import AccountsTable from "./accountsTable";
-import Pagination from './common/pagination';
+import Pagination from "../common/pagination";
+import { StyledPaginationContainer } from "../styled-components/containers";
+import { StyledSubHeading } from "../styled-components/heading";
+import SearchBox from "../common/searchBox";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import Spinner from "../common/spinner";
 
 class Accounts extends Component {
   state = {
     accounts: [],
     currentPage: 1,
-    pageSize: 2,
+    pageSize: 4,
     searchQuery: "",
     sortColumn: { path: "firstname", order: "asc" },
+    loading: false,
   };
 
   async componentDidMount() {
+    this.setState({ loading: true });
     const { data: accounts } = await getAccounts();
-    this.setState({ accounts });
+    this.setState({ accounts, loading: false });
   }
 
   handlePageChange = (page) => {
@@ -44,8 +51,11 @@ class Accounts extends Component {
 
     let filtered = allAccounts;
     if (searchQuery)
-      filtered = allAccounts.filter((m) =>
-        m.firstname.toLowerCase().startsWith(searchQuery.toLowerCase())
+      filtered = allAccounts.filter(
+        (acc) =>
+          acc.firstName.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
+          acc.lastName.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
+          acc.email.toLowerCase().startsWith(searchQuery.toLowerCase())
       );
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
@@ -55,21 +65,17 @@ class Accounts extends Component {
   };
 
   render() {
-    const {
-      pageSize,
-      currentPage,
-      sortColumn,
-      accounts: allAccounts,
-    } = this.state;
+    const { pageSize, currentPage, sortColumn, loading } = this.state;
 
     const { totalCount, data: accounts } = this.getPagedData();
     return (
-      <div>
-        <StyledButton>
+      <>
+        <StyledSubHeading left>Accounts List</StyledSubHeading>
+        <StyledButton square right>
+          <PersonAddIcon />
           <Link to="/accounts/new">Add Account</Link>
         </StyledButton>
-        <p>Showing {totalCount} Accounts</p>
-        {/* <SearchBox value={this.searchQuery} onChange={this.handleSearch} /> */}
+        <SearchBox value={this.searchQuery} onChange={this.handleSearch} />
         <AccountsTable
           accounts={accounts}
           sortColumn={sortColumn}
@@ -77,13 +83,18 @@ class Accounts extends Component {
           onLike={this.handleLike}
           onSort={this.handleSort}
         />
-        <Pagination
+        {loading && <Spinner />}
+
+        <StyledPaginationContainer>
+          <p>Showing {totalCount} Accounts</p>
+          <Pagination
             itemCount={totalCount}
             pageSize={pageSize}
             currentPage={currentPage}
             onPageChange={this.handlePageChange}
           />
-      </div>
+        </StyledPaginationContainer>
+      </>
     );
   }
 }

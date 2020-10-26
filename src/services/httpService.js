@@ -1,6 +1,8 @@
 import Axios from "axios";
 import logger from "./logService";
 
+Axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
+
 Axios.interceptors.response.use(null, (error) => {
   const expectedError =
     error.response &&

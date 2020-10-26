@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import searchIcon from "../../searchicon.png";
 
 export const StyledInput = styled.input`
   padding: 10px 6px;
@@ -65,3 +66,57 @@ export const Message = styled.span`
       background-color: #dff2bf;
     `}
 `;
+
+export const StyledTextArea = styled.textarea`
+    display: block;
+    width: 100%;
+    padding: .375rem .75rem;
+    font-weight: 400;
+    line-height: 1.5;
+    background-clip: padding-box;
+    border: 1px solid;
+    background: #f9f9f9;
+    border-color: #e4e7ea;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+    height: auto;
+    min-height: 150px;
+
+  ${(props) =>
+    props.half &&
+    css`
+      width: 50%;
+    `}
+
+  &:focus {
+    border-bottom-color: ${(props) => props.theme.primary};
+    outline: 0;
+  }
+`;
+
+export const StyledSearch = styled.input`
+  padding: 6px 8px 6px 72px;
+  width: 280px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background-color: white;
+  background-position: 10px 10px; 
+  background-image: url(${searchIcon});
+  background-repeat: no-repeat;
+  padding: 10px 20px 10px 40px;
+  -webkit-transition: width 0.4s ease-in-out;
+  transition: width 0.4s ease-in-out;
+`
+
+export const StyledFormContainer = styled.div`
+  width: 50%;
+  max-width: 540px;
+  display: inline-block;
+  vertical-align: top;
+  
+  & .field-div {
+    margin: 15px 30px 15px 0;
+  }
+`

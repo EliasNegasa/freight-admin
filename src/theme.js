@@ -3,30 +3,32 @@ import { createGlobalStyle } from "styled-components";
 export const theme = {
   primary: "#ffcd11",
   secondary: "#313945",
-  grey: "#f0f0f0",
+  grey: "#ebedef",
   boxShadow: "0 10px 10px rgba(0, 0, 0, 0.08)",
   transition: "all 0.25s cubic-bezier(0.02, 0.01, 0.47, 1)",
 };
 
+// "#313945",
+
 export const GlobalStyle = createGlobalStyle`
   html {
     box-sizing: border-box;
-    font-size: 10px
+    font-size: 14px;
   }
   *, *:before, *:after{
-    box-sizing: border-box;
+    box-sizing: border-box;    
   }
   body {
     margin: 0;
     padding: 0;
-    font-size: 1.4rem;
+    font-size: 1rem;
     line-height: 2;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
       sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background: #f3f3f3;
+    background: #ebedef;
   }
   
   code {
@@ -45,6 +47,21 @@ export const GlobalStyle = createGlobalStyle`
 }
 ul.pagination-ul {
     display: flex;
-    justify-content: flex-start;
+    margin: 2px 0;
+    white-space: nowrap;
+    justify-content: flex-end;
+}
+.icons {
+  margin-right: 10px;
+}
+.MuiSvgIcon-root {
+    margin-right: 1rem;
+    position: relative;
+    top: 5px;
+}
+.MuiCircularProgress-root {
+  margin: 10px auto !important;
 }
   `;
+
+

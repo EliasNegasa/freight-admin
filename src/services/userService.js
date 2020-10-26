@@ -5,8 +5,8 @@ const apiEndpoint = `${apiUrl}/api/user`;
 
 export function register(user) {
   let request = {
-    firstName: user.firstname,
-    lastName: user.lastname,
+    firstName: user.firstName,
+    lastName: user.lastName,
     email: user.email,
     password: user.password,
     username: user.username,

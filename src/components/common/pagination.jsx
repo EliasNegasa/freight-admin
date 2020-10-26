@@ -17,8 +17,6 @@ const Pagination = ({ itemCount, pageSize, currentPage, onPageChange }) => {
           onClick={() => onPageChange(page)}
         >
           {page}
-          {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
-          {/* <a></a> */}
         </StyledPage>
       ))}
     </ul>

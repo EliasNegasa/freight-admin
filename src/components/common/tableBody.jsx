@@ -1,11 +1,16 @@
 import React, { Component } from "react";
 import _ from "lodash";
 import { StyledTd, StyledTr } from "../styled-components/styledTable";
+import { StyledBadge } from "../styled-components/containers";
 
 class TableBody extends Component {
   renderCell = (item, column) => {
     if (column.content) return column.content(item);
-    return _.get(item, column.path);
+    const cellData = _.get(item, column.path);
+    if (cellData === true) return <StyledBadge approved>Active</StyledBadge>;
+    else if (cellData === false)
+      return <StyledBadge inactive>InActive</StyledBadge>;
+    return cellData;
   };
 
   render() {
@@ -13,9 +18,9 @@ class TableBody extends Component {
     return (
       <tbody>
         {data.map((item) => (
-          <StyledTr key={item._id}>
+          <StyledTr key={item.id}>
             {columns.map((column) => (
-              <StyledTd key={item._id + (column.path || column.key)}>
+              <StyledTd key={item.id + (column.path || column.key)}>
                 {this.renderCell(item, column)}
               </StyledTd>
             ))}

@@ -21,18 +21,38 @@ export const StyledButton = styled.button`
       width: 100%;
     `}
 
-  ${(props) =>
-    props.secondary &&
+    ${(props) =>
+    props.square &&
     css`
-      color: ${(props) => props.theme.primary};
-      background-color: transparent;
+      border-radius: 0;
+      width: fit-content;
+      padding: 12px 20px;
+    `}
+
+    ${(props) =>
+    props.right &&
+    css`
+      margin: 0 0 1rem auto;
+    `}
+    
+
+  ${(props) =>
+    props.danger &&
+    css`
+      color: #fff;
+      background-color: #d82038;
+      & a{
+        color: #fff !important;
+      }
     `}
 
   &:hover {
     box-shadow: 0 15px 15px rgba(0, 0, 0, 0.16);
     transform: translate(0, -3px);
   }
-  &.a{
+  & a{
     color: #000;
+    position: relative;
+    top: -2px;
   }
 `;

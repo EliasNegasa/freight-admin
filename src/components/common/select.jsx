@@ -1,18 +1,30 @@
+import { FormControl, InputLabel, Select } from "@material-ui/core";
 import React from "react";
-import { StyledSelect } from "../styled-components/styledForm";
 
-const Select = ({ name, label, options, errors, ...rest }) => {
+const SelectInput = ({ name, label, options, errors, ...rest }) => {
   return (
-    <div className="form-group">
-      {/* <label htmlFor={name}>{label}</label> */}
-      <StyledSelect name={name} id={name} {...rest} className="form-control">
-        <option value="">User Type</option>
-        {options.map((option) => (
-          <option key={option} value={option}>
-            {option}
-          </option>
-        ))}
-      </StyledSelect>
+    <div className="field-div">
+      <FormControl variant="outlined">
+        <InputLabel htmlFor={name} color="secondary">
+          {label}
+        </InputLabel>
+        <Select
+          name={name}
+          id={name}
+          {...rest}
+          native
+          label={label}
+          color="secondary"
+        >
+          <option value=""></option>
+          {options.map((option) => (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+
       {errors && (
         <div className="alert alert-danger" role="alert">
           {errors}
@@ -22,4 +34,13 @@ const Select = ({ name, label, options, errors, ...rest }) => {
   );
 };
 
-export default Select;
+export default SelectInput;
+
+/* <StyledSelect name={name} id={name} {...rest} className="form-control">
+        <option value="">User Type</option>
+        {options.map((option) => (
+          <option key={option} value={option}>
+            {option}
+          </option>
+        ))}
+      </StyledSelect> */

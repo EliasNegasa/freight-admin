@@ -3,15 +3,14 @@ import Form from "./common/form";
 import { StyledCard } from "./styled-components/card";
 import { StyledSubHeading } from "./styled-components/heading";
 import { register } from "../services/userService";
-// import auth from "../services/authService";
 
 const Joi = require("joi-browser");
 
 class RegisterForm extends Form {
   state = {
     data: {
-      firstname: "",
-      lastname: "",
+      firstName: "",
+      lastName: "",
       email: "",
       password: "",
       username: "",
@@ -23,8 +22,8 @@ class RegisterForm extends Form {
   };
 
   schema = {
-    firstname: Joi.string().required(),
-    lastname: Joi.string().required(),
+    firstName: Joi.string().required(),
+    lastName: Joi.string().required(),
     email: Joi.string().email().required().label("Email"),
     username: Joi.string().required(),
     password: Joi.string().required().min(5).label("Password"),
@@ -35,8 +34,7 @@ class RegisterForm extends Form {
 
   doSubmit = async () => {
     try {
-      console.log("DATA", this.state.data);
-      const data = await register(this.state.data);
+      await register(this.state.data);
       // auth.loginWithJwt(headers["Authorization"]);
 
       // window.location = "/";
@@ -44,7 +42,7 @@ class RegisterForm extends Form {
       console.log(ex.response)
       if (ex.response && ex.response.status === 400) {
         const errors = { ...this.state.errors };
-        errors.email = "email already registered"; //ex.response.data;
+        errors.email = "Email already registered"; //ex.response.data;
         this.setState({ errors });
       }
     }
@@ -55,8 +53,8 @@ class RegisterForm extends Form {
       <StyledCard big>
         <StyledSubHeading>Register</StyledSubHeading>
         <form onSubmit={this.handleSubmit}>
-          {this.renderInput("firstname", "First Name")}
-          {this.renderInput("lastname", "Last Name")}
+          {this.renderInput("firstName", "First Name")}
+          {this.renderInput("lastName", "Last Name")}
           {this.renderInput("email", "Email Address", "Email")}
           {this.renderInput("username", "Username")}
           {this.renderInput("password", "Password", "password")}

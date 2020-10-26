@@ -1,6 +1,8 @@
 import React, { Component } from "react";
-import Table from "./common/table";
-import { StyledButton } from "./styled-components/button";
+import { Link } from "react-router-dom";
+import Table from "../common/table";
+import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 
 class AccountsTable extends Component {
   columns = [
@@ -11,19 +13,20 @@ class AccountsTable extends Component {
     { path: "userType", label: "Account Type" },
     { path: "isActivated", label: "Status" },
     {
-      key: "delete",
-      // content: (account) => (
-      //   <StyledButton
-      //     onClick={() => this.props.onDelete(account)}
-      //     className="btn btn-danger btn-sm"
-      //   >
-      //     Delete
-      //   </StyledButton>
-      // ),
+      key: "edit",
+      content: (account) => (
+        <div>
+          <Link to={`/accounts/${account.id}`}>
+            <EditOutlinedIcon style={{ color: "#f9b115" }} />
+          </Link>
+          <Link to={`/accounts/${account.id}/details`}>
+            <VisibilityOutlinedIcon style={{ color: "#000" }} />
+          </Link>
+        </div>
+      ),
     },
   ];
 
-  state = {};
   render() {
     const { accounts, onSort, sortColumn } = this.props;
     return (

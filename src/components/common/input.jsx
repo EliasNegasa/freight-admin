@@ -1,14 +1,23 @@
+import { TextField } from "@material-ui/core";
 import React from "react";
-import { StyledInput, Message } from "../styled-components/styledForm";
+import { Message } from "../styled-components/styledForm";
 
 const Input = ({ name, label, errors, ...rest }) => {
   return (
     <div className="field-div">
-      <StyledInput id={name} {...rest} name={name} placeholder={`${label}`} />
-      {/* {console.log("ERRORS: ", errors.message)} */}
+      <TextField
+        id={name}
+        {...rest}
+        name={name}
+        label={label}
+        variant="outlined"
+        color="secondary"
+        fullWidth
+      />
+
       {errors && (
         <Message role="alert">
-          <i className="fas fa-exclamation-triangle"></i> {errors}
+          <i className="fa fa-exclamation-triangle"></i> {errors}
         </Message>
       )}
     </div>
@@ -16,3 +25,6 @@ const Input = ({ name, label, errors, ...rest }) => {
 };
 
 export default Input;
+
+/* <StyledInput id={name} {...rest} name={name} placeholder={`${label}`} /> */
+/* {console.log("ERRORS: ", errors.message)} */
