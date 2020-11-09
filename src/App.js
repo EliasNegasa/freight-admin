@@ -22,6 +22,7 @@ import Requests from "./components/request/requests";
 import JobForm from "./components/jobs/jobForm";
 import Doc from "./components/doc";
 import Lowbeds from "./components/lowbed/lowbeds";
+import LowbedForm from "./components/lowbed/lowbedForm";
 
 
 class App extends Component {
@@ -67,6 +68,7 @@ class App extends Component {
                 <Route path='/machines' component={Machine} />
                 <Route path='/jobs/:id' component={JobForm} />
                 <Route path='/jobs' component={Jobs} />
+                <Route path='/lowbeds/:id' component={LowbedForm} />
                 <Route path='/lowbeds' component={Lowbeds} />
                 <Route path='/requests/:id' component={Requests} />
                 <Route path='/requests' component={Requests} />
