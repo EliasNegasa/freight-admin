@@ -5,6 +5,7 @@ import Form from "../common/form";
 import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
 import Spinner from "../common/spinner";
+import { saveFile } from "../../services/fileService";
 
 const Joi = require("joi-browser");
 
@@ -15,7 +16,8 @@ class AccountForm extends Form {
       lastName: "",
       email: "",
       username: "",
-      password: "",
+      // password: "",
+      address: {},
       phone: "",
       role: "Admin",
       file: "",
@@ -40,11 +42,11 @@ class AccountForm extends Form {
     userType: Joi.string().required().label("User Type"),
     role: Joi.string().required().label("Role"),
 
-    kebele: Joi.number().label("Kebele"),
-    woreda: Joi.number().label("Woreda"),
-    zone: Joi.string().label("Zone"),
-    city: Joi.string().label("City"),
-    company: Joi.string().label("Company"),
+    kebele: Joi.label("Kebele"),
+    woreda: Joi.label("Woreda"),
+    zone: Joi.label("Zone"),
+    city: Joi.label("City"),
+    company: Joi.label("Company"),
     companyPhone: Joi.number().label("Company Phone"),
   };
 
@@ -71,34 +73,37 @@ class AccountForm extends Form {
       id: account.id,
       firstName: account.firstName,
       lastName: account.lastName,
-      password: account.password,
       email: account.email,
       username: account.username,
       phone: account.phone,
       userType: account.userType,
       role: account.role,
       file: account.file,
-      addressId: account.address ? account.address.id : "",
-      kebele: account.address ? account.address.kebele : "",
-      woreda: account.address ? account.address.woreda : "",
-      zone: account.address ? account.address.zone : "",
-      city: account.address ? account.address.city : "",
-      company: account.address ? account.address.company : "",
-      companyPhone: account.address ? account.address.companyPhone : "",
+      addressId: account.address ? account.address.id : undefined,
+      kebele: account.address ? account.address.kebele : undefined,
+      woreda: account.address ? account.address.woreda : undefined,
+      zone: account.address ? account.address.zone : undefined,
+      city: account.address ? account.address.city : undefined,
+      company: account.address ? account.address.company : undefined,
+      companyPhone: account.address ? account.address.companyPhone : undefined,
     };
   };
 
-  mapToFormData = (jsonAccount) => {
-    const formData = new FormData();
+  // appendToFormData = (jsonAccount) => {
+  //   const formData = new FormData();
 
-    Object.keys(jsonAccount).forEach((key) => {
-      formData.append(key, JSON.stringify(jsonAccount[key]));
-    });
+  //   Object.keys(jsonAccount).forEach((key) => {
+  //     formData.append(key, jsonAccount[key]);
+  //   });
 
-    return formData;
-  };
+  //   return formData;
+  // };
 
   doSubmit = async () => {
+    const data = { ...this.state.data };
+
+    console.log("Data", data);
+
     const {
       addressId,
       kebele,
@@ -107,9 +112,20 @@ class AccountForm extends Form {
       city,
       company,
       companyPhone,
-    } = this.state.data;
+    } = data;
 
-    const address = {
+    const userData = _.pick(data, [
+      "id",
+      "firstName",
+      "lastName",
+      "email",
+      "username",
+      "phone",
+      "role",
+      "userType",
+    ]);
+
+    userData.address = {
       addressId,
       kebele,
       woreda,
@@ -119,29 +135,19 @@ class AccountForm extends Form {
       companyPhone,
     };
 
-    const data = { ...this.state.data };
+    const { data: account } = await saveAccount(userData);
 
-    const pickedData = _.pick(data, [
-      "id",
-      "firstName",
-      "lastName",
-      "email",
-      "username",
-      "password",
-      "phone",
-      "role",
-      "file",
-      "userType",
-    ]);
+    const userId = account.id ? account.id : account.result.id;
 
-    pickedData.address = address;
+    if (data.file) {
+      const fileObj = _.pick(data, ["file"]);
 
-    console.log("Data", data);
-    console.log("pickedData", pickedData);
+      const formData = new FormData();
+      formData.append("file", fileObj.file);
+      formData.append("id", userId);
 
-    const extractedData = this.mapToFormData(pickedData);
-    await saveAccount(extractedData);
-
+      console.log(await saveFile(formData, "users"));
+    }
     console.log("Saved");
     this.props.history.push("/accounts");
   };
@@ -149,34 +155,43 @@ class AccountForm extends Form {
   render() {
     return (
       <>
-        <StyledSubHeading left>
-          {this.state.data.id ? <span>Edit </span> : <span>Add </span>}Account
-        </StyledSubHeading>
-        <form onSubmit={this.handleSubmit}>
-          {this.state.loading && <Spinner />}
-          <StyledFormContainer>
-            <strong>Personal Information:</strong>
-            {this.renderInput("firstName", "First Name")}
-            {this.renderInput("lastName", "Last Name")}
-            {this.renderInput("email", "Email")}
-            {this.renderInput("username", "Username")}
-            {this.renderInput("phone", "Phone No.")}
-            {this.renderSelect("userType", "Account Type", this.state.userType)}
-            {this.renderFileUpload("file", "Upload Picture")}
-            {/* is Admin checkbox */}
-          </StyledFormContainer>
+        {this.state.loading && <Spinner />}
+        {!this.state.loading && (
+          <>
+            <StyledSubHeading left>
+              {this.state.data.id ? <span>Edit </span> : <span>Add </span>}
+              Account
+            </StyledSubHeading>
+            <form onSubmit={this.handleSubmit}>
+              <StyledFormContainer>
+                <strong>Personal Information:</strong>
+                {this.renderInput("firstName", "First Name")}
+                {this.renderInput("lastName", "Last Name")}
+                {this.renderInput("email", "Email")}
+                {this.renderInput("username", "Username")}
+                {this.renderInput("phone", "Phone No.")}
+                {this.renderSelect(
+                  "userType",
+                  "Account Type",
+                  this.state.userType
+                )}
+                {this.renderFileUpload("file", "Upload Picture")}
+                {/* is Admin checkbox */}
+              </StyledFormContainer>
 
-          <StyledFormContainer>
-            <strong>Address:</strong>
-            {this.renderInput("kebele", "Kebele", "number")}
-            {this.renderInput("woreda", "Woreda", "number")}
-            {this.renderInput("zone", "Subcity/Zone")}
-            {this.renderInput("city", "City")}
-            {this.renderInput("company", "Company")}
-            {this.renderInput("companyPhone", "Company Phone")}
-          </StyledFormContainer>
-          {this.renderButton("Save")}
-        </form>
+              <StyledFormContainer>
+                <strong>Address:</strong>
+                {this.renderInput("kebele", "Kebele", "number")}
+                {this.renderInput("woreda", "Woreda", "number")}
+                {this.renderInput("zone", "Subcity/Zone")}
+                {this.renderInput("city", "City")}
+                {this.renderInput("company", "Company")}
+                {this.renderInput("companyPhone", "Company Phone")}
+              </StyledFormContainer>
+              {this.renderButton("Save")}
+            </form>
+          </>
+        )}
       </>
     );
   }

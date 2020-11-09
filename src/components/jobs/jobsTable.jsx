@@ -7,10 +7,15 @@ import Table from "../common/table";
 class JobsTable extends Component {
   columns = [
     { path: "title", label: "Job Title" },
-    { path: "postedBy", label: "Posted By" },
-    { path: "data", label: "Date" },
-    { path: "location", label: "Location" },
+    { path: "pickUpDate", label: "Pick-up Date" },
+    { path: "pickUpAddress.city", label: "Pick-up Address", typo: "date" },
+    { path: "dropOffpDate", label: "Drop-off Date" },
+    { path: "dropOffAddress.city", label: "Drop-off Address" },
+    { path: "weight", label: "Weight" },
+    { path: "distance", label: "Distance" },
+    // { path: "offRoadDistance", label: "Off-road Distance" },
     { path: "status", label: "Status" },
+    { path: "user.firstName", label: "Posted By" },
     {
       key: "edit",
       content: (account) => (

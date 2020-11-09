@@ -26,7 +26,7 @@ export const StyledButton = styled.button`
     css`
       border-radius: 0;
       width: fit-content;
-      padding: 12px 20px;
+      padding: 9px 20px 12px;
     `}
 
     ${(props) =>
@@ -39,10 +39,44 @@ export const StyledButton = styled.button`
   ${(props) =>
     props.danger &&
     css`
-      color: #fff;
+      color: #fff !important;
       background-color: #d82038;
+      border-color: #d82038;
       & a{
         color: #fff !important;
+      }
+      & .MuiSvgIcon-root {
+        color: white;
+      }
+    `}
+
+    ${(props) =>
+    props.success &&
+    css`
+      color: #fff !important;
+      background-color: #2eb85c;
+      border-color: #2eb85c;
+      
+      & a{
+        color: #fff !important;
+      }
+      & .MuiSvgIcon-root {
+        color: white;
+      }
+    `}
+
+    ${(props) =>
+    props.inactive &&
+    css`
+      color: #fff !important;
+      background-color: #636f83;
+      border-color: #636f83;
+      
+      & a{
+        color: #fff !important;
+      }
+      & .MuiSvgIcon-root {
+        color: white;
       }
     `}
 
@@ -54,5 +88,10 @@ export const StyledButton = styled.button`
     color: #000;
     position: relative;
     top: -2px;
+  }
+  & .MuiSvgIcon-root {
+    margin-right: 1rem;
+    position: relative;
+    top: 5px;
   }
 `;

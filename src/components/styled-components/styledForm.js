@@ -119,4 +119,25 @@ export const StyledFormContainer = styled.div`
   & .field-div {
     margin: 15px 30px 15px 0;
   }
+  & .double-field {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;    
+  }
+  & .login-form .field-div {
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  ${(props) =>
+    props.threeColumn &&
+    css`
+      width: 33.333%;
+    `}
+
+    ${(props) =>
+    props.oneColumn &&
+    css`
+      width: 100%;
+    `}
 `

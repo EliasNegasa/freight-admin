@@ -21,3 +21,7 @@ export function saveMachine(machine) {
 export function deleteMachine(machineId) {
   return http.delete(`${apiEndpoint}/${machineId}`);
 }
+
+export function filterMachines(query) {
+  return http.get(`${apiEndpoint}/userId=${query}`);
+}

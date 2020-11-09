@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import PermDataSettingOutlinedIcon from "@material-ui/icons/PermDataSettingOutlined";
 import { getMachines } from "../../services/machineService";
 import Spinner from "../common/spinner";
 import { StyledButton } from "../styled-components/button";
@@ -26,6 +27,7 @@ class Machine extends Component {
       <>
         <StyledSubHeading left>Machine List</StyledSubHeading>
         <StyledButton square right>
+        <PermDataSettingOutlinedIcon />
           <Link to="/machines/new">Add Machine</Link>
         </StyledButton>
         {loading && <Spinner />}

@@ -27,7 +27,7 @@ const NavBar = () => {
         </NavLink>
       </StyledNav>
       <StyledNav>
-        <NavLink className="nav-link" to="/machines/lowbeds">
+        <NavLink className="nav-link" to="/lowbeds">
           <LocalShippingOutlinedIcon /> Lowbeds
         </NavLink>
       </StyledNav>

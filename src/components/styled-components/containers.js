@@ -55,6 +55,22 @@ export const StyledHeader = styled.div`
     border-bottom: 1px solid #d8dbe0;
     border: 0;
     box-shadow: 0 2px 2px 0 rgba(60,75,100,.14), 0 3px 1px -2px rgba(60,75,100,.12), 0 1px 5px 0 rgba(60,75,100,.2);
+
+    & .header-profile {
+        min-width: 200px;
+        margin-left: auto;
+        padding: 10px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    & .header-profile div {
+        margin-right: 20px;
+    }
+    & .user-name {
+        margin-top: 6px;
+    }
+
 `;
 
 export const StyledNav = styled.li`
@@ -78,6 +94,11 @@ export const StyledNav = styled.li`
   & a:hover, & a.active {
     background-color: #252b32;
     border-left: 4px solid #ffcd11;
+  }
+  & .MuiSvgIcon-root {
+    margin-right: 1rem;
+    position: relative;
+    top: 5px;
   }
 `;
 
@@ -104,6 +125,14 @@ export const StyledFlex = styled.div`
     justify-content: space-between;
     align-items: stretch;
     width: 100%;
+
+    ${(props) => props.smallWidth && css`
+      max-width: 350px;
+    `}
+
+    ${(props) => props.right && css`
+      margin-left: auto;
+    `}
 `
 
 export const StyledBadge = styled.span`

@@ -19,7 +19,7 @@ class MachineForm extends Form {
 
   schema = {
     name: Joi.string().required().label("Machine Name"),
-    description: Joi.string().label("Description"),
+    description: Joi.label("Description"),
     isLowbed: Joi.boolean().label("Machine Type"),
   };
 
@@ -29,6 +29,7 @@ class MachineForm extends Form {
       if (machineId === "new") return;
 
       const { data: machine } = await getMachine(machineId);
+
       console.log("MACHINE DATA", machine);
       this.setState({ data: this.mapToViewModel(machine) });
     } catch (ex) {

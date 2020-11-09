@@ -8,14 +8,14 @@ import { theme, GlobalStyle } from "./theme";
 import "font-awesome/css/font-awesome.css";
 
 ReactDOM.render(
-  <React.StrictMode>
+  <>
     <ThemeProvider theme={theme}>
       <GlobalStyle />
       <BrowserRouter>
         <App />
       </BrowserRouter>
     </ThemeProvider>
-  </React.StrictMode>,
+  </>,
   document.getElementById("root")
 );
 

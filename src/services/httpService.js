@@ -1,7 +1,7 @@
 import Axios from "axios";
 import logger from "./logService";
 
-Axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
+// Axios.defaults.headers.post['Content-Type'] = 'multipart/form-data';
 
 Axios.interceptors.response.use(null, (error) => {
   const expectedError =
@@ -15,6 +15,10 @@ Axios.interceptors.response.use(null, (error) => {
   return Promise.reject(error);
 });
 
+function setContentType(type = 'application/json') {
+  Axios.defaults.headers.post['Content-Type'] = type;
+}
+
 function setJwt(jwt) {
   Axios.defaults.headers.common["Authorization"] = "Bearer " + jwt;
 }
@@ -25,4 +29,5 @@ export default {
   put: Axios.put,
   delete: Axios.delete,
   setJwt,
+  setContentType,
 };

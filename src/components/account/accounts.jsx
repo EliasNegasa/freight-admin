@@ -16,7 +16,7 @@ class Accounts extends Component {
   state = {
     accounts: [],
     currentPage: 1,
-    pageSize: 4,
+    pageSize: 10,
     searchQuery: "",
     sortColumn: { path: "firstname", order: "asc" },
     loading: false,

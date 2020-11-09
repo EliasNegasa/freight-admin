@@ -54,13 +54,15 @@ ul.pagination-ul {
 .icons {
   margin-right: 10px;
 }
-.MuiSvgIcon-root {
-    margin-right: 1rem;
-    position: relative;
-    top: 5px;
-}
+
 .MuiCircularProgress-root {
   margin: 10px auto !important;
+}
+.MuiOutlinedInput-input {
+    padding: 15.5px 14px !important;
+}
+.MuiInputLabel-outlined {
+  z-index: 0 !important;
 }
   `;
 

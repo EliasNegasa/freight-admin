@@ -5,6 +5,7 @@ import TextArea from "./textArea";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
 import FileUplaod from "./fileUpload";
 import SelectInput from "./select";
+import PreloadedSelect from "./preloadedSelect";
 
 const Joi = require("joi-browser");
 
@@ -50,6 +51,7 @@ class Form extends Component {
   handleFileChange = ({ currentTarget: input }) => {
     const data = { ...this.state.data };
     data[input.name] = input.files[0];
+    console.log("FILE", data[input.name]);
     this.setState({ data });
   };
 
@@ -63,6 +65,12 @@ class Form extends Component {
     data[input.name] = input.type === "checkbox" ? input.checked : input.value;
     this.setState({ data, errors });
   };
+
+  handlePreloadedSelectChange(e) {
+    const data = { ...this.state.data };
+    data["userId"] = e.value;
+    this.setState({ data });
+  }
 
   renderButton = (label) => {
     return (
@@ -128,6 +136,18 @@ class Form extends Component {
         options={options}
         onChange={this.handleChange}
         errors={errors[name]}
+      />
+    );
+  };
+
+  renderPreloadedSelect = (name, label, options) => {
+    const { data } = this.state;
+    return (
+      <PreloadedSelect
+        options={options}
+        placeholder={label}
+        onChange={(e) => this.handlePreloadedSelectChange(e)}
+        setValue={data[name] ? data[name] : ""}
       />
     );
   };

@@ -12,7 +12,7 @@ export function getJob(jobId) {
 }
 
 export function saveJob(job) {
-    if (job.get('id')) {
+    if (job.id) {
         return http.put(apiEndpoint, job);
     }
     return http.post(apiEndpoint, job);

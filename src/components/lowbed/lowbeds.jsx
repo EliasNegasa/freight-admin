@@ -1,33 +1,31 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import _ from "lodash";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import Pagination from "../common/pagination";
-import SearchBox from "../common/searchBox";
-import { StyledButton } from "../styled-components/button";
-import { StyledPaginationContainer } from "../styled-components/containers";
+import { getLowbeds } from "../../services/lowbedService";
 import { StyledSubHeading } from "../styled-components/heading";
-import Spinner from "../common/spinner";
-import { getJobs } from "../../services/jobService";
 import { paginate } from "../../utils/paginate";
-import JobsTable from "./jobsTable";
+import { StyledButton } from "../styled-components/button";
+import { Link } from "react-router-dom";
+import SearchBox from "../common/searchBox";
+import LocalShippingOutlinedIcon from "@material-ui/icons/LocalShippingOutlined";
+import LowbedsTable from "./lowbedsTable";
+import { StyledPaginationContainer } from "../styled-components/containers";
+import Pagination from "../common/pagination";
+import Spinner from "../common/spinner";
 
-class Jobs extends Component {
+class Lowbeds extends Component {
   state = {
-    jobs: [],
+    lowbeds: [],
     currentPage: 1,
     pageSize: 10,
     searchQuery: "",
-    sortColumn: { path: "title", order: "asc" },
+    sortColumn: { path: "licensePlate", order: "asc" },
     loading: false,
   };
 
   async componentDidMount() {
     this.setState({ loading: true });
-    const { data: jobs } = await getJobs();
-    console.log("JOB DATA", jobs);
-    // const { data: jobUser } = await getAccount(this.state.jobs.userId);
-    this.setState({ jobs, loading: false });
+    const { data: lowbeds } = await getLowbeds();
+    this.setState({ lowbeds, loading: false });
   }
 
   handlePageChange = (page) => {
@@ -48,39 +46,41 @@ class Jobs extends Component {
       currentPage,
       searchQuery,
       sortColumn,
-      jobs: allJobs,
+      lowbeds: allLowbeds,
     } = this.state;
 
-    let filtered = allJobs;
+    let filtered = allLowbeds;
     if (searchQuery)
-      filtered = allJobs.filter(
-        (j) =>
-          j.title.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-          j.pickUpDate.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-          j.dropOffpDate.toLowerCase().startsWith(searchQuery.toLowerCase()) 
+      filtered = allLowbeds.filter(
+        (lowbed) =>
+          lowbed.licensePlate
+            .toLowerCase()
+            .startsWith(searchQuery.toLowerCase()) ||
+          lowbed.motorNo.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
+          lowbed.chassieNo.toLowerCase().startsWith(searchQuery.toLowerCase())
       );
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
-    const jobs = paginate(sorted, currentPage, pageSize);
-    return { totalCount: filtered.length, data: jobs };
+    const lowbeds = paginate(sorted, currentPage, pageSize);
+    return { totalCount: filtered.length, data: lowbeds };
   };
 
   render() {
     const { pageSize, currentPage, sortColumn, loading } = this.state;
 
-    const { totalCount, data: jobs } = this.getPagedData();
+    const { totalCount, data: lowbeds } = this.getPagedData();
 
     return (
       <>
-        <StyledSubHeading left>Jobs List</StyledSubHeading>
+        <StyledSubHeading left>Registered Lowbeds</StyledSubHeading>
         <StyledButton square right>
-          <PersonAddIcon />
-          <Link to="/jobs/new">Add Job</Link>
+          <LocalShippingOutlinedIcon />
+          <Link to="/lowbeds/new">Add Lowbed</Link>
         </StyledButton>
         <SearchBox value={this.searchQuery} onChange={this.handleSearch} />
-        <JobsTable
-          jobs={jobs}
+        <LowbedsTable
+          lowbeds={lowbeds}
           sortColumn={sortColumn}
           onDelete={this.handleDelete}
           onLike={this.handleLike}
@@ -89,7 +89,7 @@ class Jobs extends Component {
         {loading && <Spinner />}
 
         <StyledPaginationContainer>
-          <p>Showing {totalCount} Jobs</p>
+          <p>Showing {totalCount} Accounts</p>
           <Pagination
             itemCount={totalCount}
             pageSize={pageSize}
@@ -102,4 +102,4 @@ class Jobs extends Component {
   }
 }
 
-export default Jobs;
+export default Lowbeds;

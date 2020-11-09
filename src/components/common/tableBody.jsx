@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import _ from "lodash";
 import { StyledTd, StyledTr } from "../styled-components/styledTable";
 import { StyledBadge } from "../styled-components/containers";
+import { ContactsOutlined } from "@material-ui/icons";
 
 class TableBody extends Component {
   renderCell = (item, column) => {

@@ -19,6 +19,9 @@ import NotFound from "./components/notFound";
 import Header from "./components/header";
 import Jobs from "./components/jobs/jobs";
 import Requests from "./components/request/requests";
+import JobForm from "./components/jobs/jobForm";
+import Doc from "./components/doc";
+import Lowbeds from "./components/lowbed/lowbeds";
 
 
 class App extends Component {
@@ -33,6 +36,7 @@ class App extends Component {
     const { user } = this.state;
     return (
       <>
+        <Doc />
         {!user &&
           <>
             <Route
@@ -46,11 +50,11 @@ class App extends Component {
             />
             <Route path="/register" component={RegisterForm} />
             <Route path="/login/confirmed" component={LoginForm} />
-            <Route path="/login" component={LoginForm} />
+            <Route exact path="/login" component={LoginForm} />
           </>}
 
         {user && <SideBar />}
-        {user && <Header />}
+        {user && <Header user={this.state.user} />}
         {user && <StyledContainer>
           <StyledContent>
             <StyledSubContainer>
@@ -61,12 +65,15 @@ class App extends Component {
                 <Route path="/accounts" component={Accounts} />
                 <Route path='/machines/:id' component={MachineForm} />
                 <Route path='/machines' component={Machine} />
+                <Route path='/jobs/:id' component={JobForm} />
                 <Route path='/jobs' component={Jobs} />
+                <Route path='/lowbeds' component={Lowbeds} />
+                <Route path='/requests/:id' component={Requests} />
                 <Route path='/requests' component={Requests} />
                 <Route path="/logout" component={LoginForm} />
 
-                <Route path="/dashboard" component={Home} />
                 <Redirect exact from="/" to="/dashboard" />
+                <Route path="/dashboard" component={Home} />
                 <Route path="/not-found" component={NotFound} />
                 <Redirect to="/not-found" />
               </Switch>
