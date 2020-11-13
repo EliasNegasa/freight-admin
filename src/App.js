@@ -23,6 +23,9 @@ import JobForm from "./components/jobs/jobForm";
 import Doc from "./components/doc";
 import Lowbeds from "./components/lowbed/lowbeds";
 import LowbedForm from "./components/lowbed/lowbedForm";
+import ReactNotification from 'react-notifications-component'
+import 'react-notifications-component/dist/theme.css'
+import Notification from "./components/common/notification";
 
 
 class App extends Component {
@@ -37,6 +40,7 @@ class App extends Component {
     const { user } = this.state;
     return (
       <>
+        <ReactNotification />
         <Doc />
         {!user &&
           <>

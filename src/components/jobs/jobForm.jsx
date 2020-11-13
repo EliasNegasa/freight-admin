@@ -8,6 +8,7 @@ import { StyledFormContainer } from "../styled-components/styledForm";
 import { saveFile } from "../../services/fileService";
 import { getAccounts } from "../../services/accountService";
 import { getMachines } from "../../services/machineService";
+import Notification from "../common/notification";
 
 const Joi = require("joi-browser");
 
@@ -45,6 +46,7 @@ export class JobForm extends Form {
     machineSelectOptions: [],
     errors: {},
     loading: false,
+    message: "",
   };
 
   schema = {
@@ -105,6 +107,8 @@ export class JobForm extends Form {
       value: d.id,
       label: d.name,
     }));
+
+    console.log("machine options", options);
 
     this.setState({ machineSelectOptions: options });
   }
@@ -190,6 +194,7 @@ export class JobForm extends Form {
       "dropOffpDate",
       "weight",
       "height",
+      "length",
       "quantity",
       "distance",
       "offRoadDistance",
@@ -214,33 +219,63 @@ export class JobForm extends Form {
     };
 
     console.log("JOB Data", jobData);
+    try {
+      const { data: job } = await saveJob(jobData);
+      console.log("RES", job);
 
-    const { data: job } = await saveJob(jobData);
+      const jobId = job.id ? job.id : job.result.id;
 
-    const jobId = job.id ? job.id : job.result.id;
-    const fileObj = _.pick(data, ["file"]);
+      if (data.file) {
+        const fileObj = _.pick(data, ["file"]);
 
-    const formData = new FormData();
-    formData.append("file", fileObj.file);
-    formData.append("id", jobId);
+        const formData = new FormData();
 
-    console.log(await saveFile(formData, "jobs"));
+        formData.append("file", fileObj.file);
+        formData.append("id", jobId);
 
-    console.log("Saved");
-    this.props.history.push("/jobs");
+        console.log(await saveFile(formData, "jobs"));
+      }
+      
+      this.setState({
+        message: job.result
+          ? "Job data updated Successfully"
+          : "Job created Successfully",
+        messageType: "success",
+        messageTitle: "Success",
+      });
+      console.log("Saved");
+      this.props.history.push("/jobs");
+    } catch (ex) {
+      if (ex.response && ex.response.status !== 200) {
+        const { error } = ex.response.data;
+        this.setState({
+          message: error.message,
+          messageType: "danger",
+          messageTitle: "Error",
+        });
+      }
+    }
   };
 
   render() {
+    const { loading, message, messageType, messageTitle } = this.state;
     return (
       <>
-        {this.state.loading && <Spinner />}
-        {!this.state.loading && (
+        {loading && <Spinner />}
+        {!loading && (
           <>
+            {message && (
+              <Notification
+                title={messageTitle}
+                message={message}
+                type={messageType}
+              />
+            )}
             <StyledSubHeading left>
               {this.state.data.id ? <span>Edit </span> : <span>Add </span>}Job
             </StyledSubHeading>
             <form onSubmit={this.handleSubmit}>
-              {this.state.loading && <Spinner />}
+              {loading && <Spinner />}
               <StyledFormContainer threeColumn>
                 <strong>Job Information:</strong>
                 {this.renderInput("title", "Job Title")}
@@ -250,6 +285,7 @@ export class JobForm extends Form {
                   "Machine Type",
                   this.state.machineSelectOptions
                 )}
+
                 <div className="double-field">
                   {this.renderInput("weight", "Weight (Ton)", "number")}
                   {this.renderInput("width", "Width (m)", "number")}

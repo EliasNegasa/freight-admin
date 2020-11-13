@@ -23,5 +23,5 @@ export function deleteMachine(machineId) {
 }
 
 export function filterMachines(query) {
-  return http.get(`${apiEndpoint}/userId=${query}`);
+  return http.get(`${apiEndpoint}/${query}`);
 }

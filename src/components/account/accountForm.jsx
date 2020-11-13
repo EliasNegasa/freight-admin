@@ -6,6 +6,7 @@ import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
 import Spinner from "../common/spinner";
 import { saveFile } from "../../services/fileService";
+import Notification from "../common/notification";
 
 const Joi = require("joi-browser");
 
@@ -31,6 +32,7 @@ class AccountForm extends Form {
     userType: ["Machinery Owner", "Lowbeds Owner", "Admin"],
     errors: {},
     loading: false,
+    message: "",
   };
 
   schema = {
@@ -84,8 +86,8 @@ class AccountForm extends Form {
       woreda: account.address ? account.address.woreda : undefined,
       zone: account.address ? account.address.zone : undefined,
       city: account.address ? account.address.city : undefined,
-      company: account.address ? account.address.company : undefined,
-      companyPhone: account.address ? account.address.companyPhone : undefined,
+      company: account.address ? account.address.company : "",
+      companyPhone: account.address ? account.address.phone : undefined,
     };
   };
 
@@ -132,32 +134,57 @@ class AccountForm extends Form {
       zone,
       city,
       company,
-      companyPhone,
+      phone: companyPhone,
     };
+    try {
+      const { data: account } = await saveAccount(userData);
 
-    const { data: account } = await saveAccount(userData);
+      const userId = account.id ? account.id : account.result.id;
 
-    const userId = account.id ? account.id : account.result.id;
+      if (data.file) {
+        const fileObj = _.pick(data, ["file"]);
 
-    if (data.file) {
-      const fileObj = _.pick(data, ["file"]);
+        const formData = new FormData();
+        formData.append("file", fileObj.file);
+        formData.append("id", userId);
 
-      const formData = new FormData();
-      formData.append("file", fileObj.file);
-      formData.append("id", userId);
-
-      console.log(await saveFile(formData, "users"));
+        console.log(await saveFile(formData, "users"));
+      }
+      this.setState({
+        message: account.result
+          ? "User data updated Successfully"
+          : "User created Successfully",
+        messageType: "success",
+        messageTitle: "Success",
+      });
+      console.log("Saved");
+      this.props.history.push("/accounts");
+    } catch (ex) {
+      if (ex.response && ex.response.status !== 200) {
+        const { error } = ex.response.data;
+        this.setState({
+          message: error.message,
+          messageType: "danger",
+          messageTitle: "Error",
+        });
+      }
     }
-    console.log("Saved");
-    this.props.history.push("/accounts");
   };
 
   render() {
+    const { loading, message, messageType, messageTitle } = this.state;
     return (
       <>
-        {this.state.loading && <Spinner />}
-        {!this.state.loading && (
+        {loading && <Spinner />}
+        {!loading && (
           <>
+            {message && (
+              <Notification
+                title={messageTitle}
+                message={message}
+                type={messageType}
+              />
+            )}
             <StyledSubHeading left>
               {this.state.data.id ? <span>Edit </span> : <span>Add </span>}
               Account

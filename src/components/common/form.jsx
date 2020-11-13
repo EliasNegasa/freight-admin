@@ -62,13 +62,13 @@ class Form extends Component {
     if (errorMessage) errors[input.name] = errorMessage;
     else delete errors[input.name];
     const data = { ...this.state.data };
-    data[input.name] = input.type === "checkbox" ? input.checked : input.value;
+    data[input.name] = input.type === "checkbox" ? input.checked : input.value || '';
     this.setState({ data, errors });
   };
 
-  handlePreloadedSelectChange(e) {
+  handlePreloadedSelectChange(e, name) {
     const data = { ...this.state.data };
-    data["userId"] = e.value;
+    data[name] = e.value;
     this.setState({ data });
   }
 
@@ -146,8 +146,8 @@ class Form extends Component {
       <PreloadedSelect
         options={options}
         placeholder={label}
-        onChange={(e) => this.handlePreloadedSelectChange(e)}
-        setValue={data[name] ? data[name] : ""}
+        onChange={(e) => this.handlePreloadedSelectChange(e, name)}
+        setValue={data[name] ? data[name] : undefined}
       />
     );
   };
