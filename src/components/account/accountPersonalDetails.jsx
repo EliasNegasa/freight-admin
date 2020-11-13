@@ -11,7 +11,7 @@ import DeleteForeverOutlinedIcon from "@material-ui/icons/DeleteForeverOutlined"
 import DoneAllOutlinedIcon from "@material-ui/icons/DoneAllOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import Spinner from "../common/spinner";
-import { getMachines } from "../../services/machineService";
+import { filterLowbeds } from "../../services/lowbedService";
 
 class AccountPersonalDetails extends Component {
   rows = {
@@ -28,22 +28,28 @@ class AccountPersonalDetails extends Component {
       { cell: "city", label: "City" },
       { cell: "company", label: "Company" },
     ],
+    lowbedRow: [
+      { cell: "serialNo", label: "Serial Number" },
+      { cell: "madeIn", label: "Made In" },
+      { cell: "manufacturingYear", label: "Manufacturing Year" },
+    ],
   };
 
   state = {
     account: {},
     address: {},
-    lowbed: [],
+    lowbeds: [],
     loading: false,
   };
 
   async componentDidMount() {
     this.setState({ loading: true });
     const { data: account } = await getAccount(this.props.id);
-    // const { data: lowbeds } = await getMachines('query');
+    const { data: lowbeds } = await filterLowbeds(`userId=${this.props.id}`);
     this.setState({
       account,
       address: account.address,
+      lowbeds,
       loading: false,
     });
   }
@@ -71,7 +77,7 @@ class AccountPersonalDetails extends Component {
   };
 
   render() {
-    const { account, loading } = this.state;
+    const { account, lowbeds, loading } = this.state;
     return (
       <>
         {loading && <Spinner />}
@@ -146,9 +152,17 @@ class AccountPersonalDetails extends Component {
                   <strong>Lowbed Information</strong>
                 </div>
 
-                {/* {account && (
-                  <DetailTable data={account} rows={this.rows.personalRow} />
-                )} */}
+                {console.log("Lowbeds", lowbeds)}
+
+                {lowbeds &&
+                  lowbeds.map((ld) => (
+                    <>
+                      <small style={{ color: "rgba(52, 49, 76, 0.54)" }}>
+                        License Plate: {ld.licensePlate}
+                      </small>
+                      <DetailTable data={ld} rows={this.rows.lowbedRow} />
+                    </>
+                  ))}
               </StyledCard>
             </StyledFlex>
           </>

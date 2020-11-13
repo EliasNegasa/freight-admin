@@ -57,6 +57,12 @@ class Lowbeds extends Component {
             .toLowerCase()
             .startsWith(searchQuery.toLowerCase()) ||
           lowbed.motorNo.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
+          lowbed.user.firstName
+            .toLowerCase()
+            .startsWith(searchQuery.toLowerCase()) ||
+          lowbed.user.lastName
+            .toLowerCase()
+            .startsWith(searchQuery.toLowerCase()) ||
           lowbed.chassieNo.toLowerCase().startsWith(searchQuery.toLowerCase())
       );
 

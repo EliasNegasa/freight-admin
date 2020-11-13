@@ -11,7 +11,6 @@ class LowbedsTable extends Component {
     { path: "width", label: "Width" },
     { path: "height", label: "Height" },
     { path: "length", label: "Length" },
-    { path: "weight", label: "Weight" },
     { path: "tyreNo", label: "No. of Tyres" },
     { path: "horsePower", label: "Horse Power" },
     { path: "chassieNo", label: "Chassie No." },

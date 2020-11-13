@@ -24,5 +24,5 @@ export function deleteLowbed(lowbedId) {
 }
 
 export function filterLowbeds(query) {
-    return http.get(apiEndpoint);
+    return http.get(`${apiEndpoint}/${query}`);
 }

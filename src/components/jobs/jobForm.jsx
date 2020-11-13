@@ -221,7 +221,6 @@ export class JobForm extends Form {
     console.log("JOB Data", jobData);
     try {
       const { data: job } = await saveJob(jobData);
-      console.log("RES", job);
 
       const jobId = job.id ? job.id : job.result.id;
 

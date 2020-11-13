@@ -7,7 +7,8 @@ import _ from "lodash";
 import Spinner from "../common/spinner";
 import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
-import { filterMachines, getMachines } from "../../services/machineService";
+import { filterMachines } from "../../services/machineService";
+import Notification from "../common/notification";
 
 const Joi = require("joi-browser");
 
@@ -36,12 +37,13 @@ class LowbedForm extends Form {
     machineSelectOptions: [],
     errors: {},
     loading: false,
+    message: "",
   };
 
   schema = {
     licensePlate: Joi.string().required().label("License Plate"),
     madeIn: Joi.string().required().label("Made In"),
-    manufacturingYear: Joi.string().required().label("Manufacturing Year"),
+    manufacturingYear: Joi.number().required().label("Manufacturing Year"),
     motorNo: Joi.string().required().label("Motor Number"),
     chassieNo: Joi.string().label("Chassie Number"),
     modelNo: Joi.string().required().label("Model Number"),
@@ -63,7 +65,7 @@ class LowbedForm extends Form {
       }
 
       const { data: lowbed } = await getLowbed(lowbedId);
-
+      console.log("RESPONSE", lowbed);
       this.setState({ data: this.mapToViewModel(lowbed), loading: false });
     } catch (ex) {
       this.props.history.replace("/not-found");
@@ -145,31 +147,56 @@ class LowbedForm extends Form {
     ]);
 
     console.log("Lowbed Data", lowbedData);
+    try {
+      const { data: lowbed } = await saveLowbed(lowbedData);
 
-    const { data: lowbed } = await saveLowbed(lowbedData);
-    // console.log(await saveLowbed(lowbedData));
-    // console.log("Result", lowbed);
-    // console.log("ID", lowbed.id);
+      const lowbedId = lowbed.id ? lowbed.id : lowbed.result.id;
 
-    // const lowbedId = lowbed.id ? lowbed.id : lowbed.result.id;
-    // const fileObj = _.pick(data, ["file"]);
+      if (data.file) {
+        const fileObj = _.pick(data, ["file"]);
 
-    // const formData = new FormData();
-    // formData.append("file", fileObj.file);
-    // formData.append("id", lowbedId);
+        const formData = new FormData();
+        formData.append("file", fileObj.file);
+        formData.append("id", lowbedId);
 
-    // console.log(await saveFile(formData, "jobs"));
+        console.log(await saveFile(formData, "jobs"));
+      }
+      this.setState({
+        message: lowbed.result
+          ? "Lowbed data updated Successfully"
+          : "Lowbed created Successfully",
+        messageType: "success",
+        messageTitle: "Success",
+      });
 
-    console.log("Saved");
-    this.props.history.push("/lowbeds");
+      console.log("Saved");
+      this.props.history.push("/lowbeds");
+    } catch (ex) {
+      if (ex.response && ex.response.status !== 200) {
+        const { error } = ex.response.data;
+        this.setState({
+          message: error.message,
+          messageType: "danger",
+          messageTitle: "Error",
+        });
+      }
+    }
   };
 
   render() {
+    const { loading, message, messageType, messageTitle } = this.state;
     return (
       <>
-        {this.state.loading && <Spinner />}
-        {!this.state.loading && (
+        {loading && <Spinner />}
+        {!loading && (
           <>
+            {message && (
+              <Notification
+                title={messageTitle}
+                message={message}
+                type={messageType}
+              />
+            )}
             <StyledSubHeading left>
               {this.state.data.id ? <span>Edit </span> : <span>Add </span>}
               Lowbed
