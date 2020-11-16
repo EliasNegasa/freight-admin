@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { getAccount, saveAccount } from "../../services/accountService";
 import AvatarImage from "../common/avatar";
 import DetailTable from "../common/detailTable";

@@ -6,6 +6,8 @@ import { Checkbox, FormControlLabel } from "@material-ui/core";
 import FileUplaod from "./fileUpload";
 import SelectInput from "./select";
 import PreloadedSelect from "./preloadedSelect";
+import DatePickerBox from "./datePickerBox";
+import { parseISO } from "date-fns";
 
 const Joi = require("joi-browser");
 
@@ -62,7 +64,8 @@ class Form extends Component {
     if (errorMessage) errors[input.name] = errorMessage;
     else delete errors[input.name];
     const data = { ...this.state.data };
-    data[input.name] = input.type === "checkbox" ? input.checked : input.value || '';
+    data[input.name] =
+      input.type === "checkbox" ? input.checked : input.value || "";
     this.setState({ data, errors });
   };
 
@@ -71,6 +74,14 @@ class Form extends Component {
     data[name] = e.value;
     this.setState({ data });
   }
+
+  handleDateChange = (date, name) => {
+    const data = { ...this.state.data };
+    console.log("DATE CLICKED", date);
+    data[name] = date;
+    this.setState({ data });
+    console.log("DATA", data);
+  };
 
   renderButton = (label) => {
     return (
@@ -148,6 +159,17 @@ class Form extends Component {
         placeholder={label}
         onChange={(e) => this.handlePreloadedSelectChange(e, name)}
         setValue={data[name] ? data[name] : undefined}
+      />
+    );
+  };
+
+  renderDatePicker = (name, label) => {
+    const { data } = this.state;
+    return (
+      <DatePickerBox
+        selectedDate={data[name]}
+        onChange={(date) => this.handleDateChange(date, name)}
+        label={label}
       />
     );
   };

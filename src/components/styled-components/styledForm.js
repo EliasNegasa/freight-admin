@@ -129,6 +129,22 @@ export const StyledFormContainer = styled.div`
     margin-right: auto;
   }
 
+  & .field-div .date-picker {
+    font: inherit;
+    width: 100%;
+    height: 1.1876em;
+    display: block;
+    padding: 23.5px 14px !important;
+    border-radius: 4px;
+    border-color: rgba(0, 0, 0, 0.23);
+    border-width: 1px;
+
+  }
+
+  & .field-div .react-datepicker-wrapper {
+    width: 100%;
+  }
+
   ${(props) =>
     props.threeColumn &&
     css`

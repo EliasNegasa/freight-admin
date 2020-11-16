@@ -52,7 +52,7 @@ export class JobForm extends Form {
   schema = {
     title: Joi.string().required().label("Job Title"),
     description: Joi.label("Job Description"),
-    pickUpDate: Joi.date().label("Pick up Date"),
+    pickUpDate: Joi.label("Pick up Date"),
     dropOffpDate: Joi.date().label("Drop off Date"),
     weight: Joi.number().label("Weight"),
     length: Joi.number().label("Length"),
@@ -124,8 +124,8 @@ export class JobForm extends Form {
       id: job.id,
       title: job.title,
       description: job.description,
-      pickUpDate: job.pickUpDate,
-      dropOffpDate: job.dropOffpDate,
+      pickUpDate: new Date(job.pickUpDate),
+      dropOffpDate: new Date(job.dropOffpDate),
       pickUpAddress: job.pickUpAddress,
       dropOffpAddress: job.dropOffpAddress,
       weight: job.weight,
@@ -234,7 +234,7 @@ export class JobForm extends Form {
 
         console.log(await saveFile(formData, "jobs"));
       }
-      
+
       this.setState({
         message: job.result
           ? "Job data updated Successfully"
@@ -311,7 +311,9 @@ export class JobForm extends Form {
 
               <StyledFormContainer threeColumn>
                 <strong>Pick-up Information:</strong>
-                {this.renderInput("pickUpDate", "Pick-Up Date")}
+
+                {this.renderDatePicker("pickUpDate", "Pick-Up Date")}
+                {/* {this.renderInput("pickUpDate", "Pick-Up Date")} */}
                 {this.renderInput("pickUpKebele", "Pick-Up Kebele", "number")}
                 {this.renderInput("pickUpWoreda", "Pick-Up Woreda", "number")}
                 {this.renderInput("pickUpZone", "Pick-Up Subcity/Zone")}
@@ -320,7 +322,8 @@ export class JobForm extends Form {
 
               <StyledFormContainer threeColumn>
                 <strong>Drop-up Address:</strong>
-                {this.renderInput("dropOffpDate", "Drop-Off Date")}
+                {this.renderDatePicker("dropOffpDate", "Drop-Off Date")}
+                {/* {this.renderInput("dropOffpDate", "Drop-Off Date")} */}
                 {this.renderInput("dropOffKebele", "Drop-Off Kebele", "number")}
                 {this.renderInput("dropOffWoreda", "Drop-Off Woreda", "number")}
                 {this.renderInput("dropOffZone", "Drop-Off Subcity/Zone")}
