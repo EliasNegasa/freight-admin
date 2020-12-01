@@ -3,40 +3,48 @@ import { Link } from "react-router-dom";
 import Spinner from "../common/spinner";
 import { StyledSubHeading } from "../styled-components/heading";
 import { StyledListGroup, StylesList } from "../styled-components/lists";
-import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
+import { filterJobs } from "../../services/jobService";
+import { formatDate } from "../../utils/formatDate";
 
 class AccountJobDetails extends Component {
-  state = { loading: false };
+  state = {
+    userJobs: [],
+    loading: false,
+  };
 
   async componentDidMount() {
     this.setState({ loading: true });
-    // const { data: machines } = await getJob();
-    // this.setState({ machines, loading: false });
+    const { data: userJobs } = await filterJobs(`userId=${this.props.id}`);
+    this.setState({ userJobs, loading: false });
   }
 
   render() {
-    const { loading } = this.state;
+    const { loading, userJobs } = this.state;
 
     return (
       <>
         <StyledSubHeading left>Jobs Details</StyledSubHeading>
         {loading && <Spinner />}
         <StyledListGroup>
-          {/* {machines.map((machine) => (
-            <StylesList key={machine.id}>
+          {userJobs.map((userJob) => (
+            <StylesList key={userJob.id}>
               <div>
                 <div>
-                  <div className="name">{machine.name}</div>
-                  <div className="description">{machine.description}</div>
-                </div>
-                <div className="icons-container">
-                  <Link to={`/machines/${machine.id}`}>
-                    <EditOutlinedIcon style={{ color: "#f9b115" }} />
-                  </Link>
+                  <div className="name">
+                    <Link to={`/jobs/${userJob.id}/details`}>
+                      {userJob.title}
+                    </Link>
+                  </div>
+                  <div className="description">
+                    Pick-up Date: {formatDate(userJob.pickUpDate)}
+                  </div>
+                  <div className="description">
+                    Drop-off Date: {formatDate(userJob.dropOffpDate)}
+                  </div>
                 </div>
               </div>
             </StylesList>
-          ))} */}
+          ))}
         </StyledListGroup>
       </>
     );

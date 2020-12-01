@@ -7,6 +7,7 @@ import { StyledFormContainer } from "../styled-components/styledForm";
 import Spinner from "../common/spinner";
 import { saveFile } from "../../services/fileService";
 import Notification from "../common/notification";
+import AvatarImage from "../common/avatar";
 
 const Joi = require("joi-browser");
 
@@ -28,6 +29,7 @@ class AccountForm extends Form {
       city: "",
       company: "",
       companyPhone: "",
+      picture: "",
     },
     userType: ["Machinery Owner", "Lowbeds Owner", "Admin"],
     errors: {},
@@ -88,6 +90,7 @@ class AccountForm extends Form {
       city: account.address ? account.address.city : undefined,
       company: account.address ? account.address.company : "",
       companyPhone: account.address ? account.address.phone : undefined,
+      picture: account.picture ? account.picture : undefined,
     };
   };
 
@@ -172,7 +175,7 @@ class AccountForm extends Form {
   };
 
   render() {
-    const { loading, message, messageType, messageTitle } = this.state;
+    const { loading, message, messageType, messageTitle, data } = this.state;
     return (
       <>
         {loading && <Spinner />}
@@ -201,6 +204,13 @@ class AccountForm extends Form {
                   "userType",
                   "Account Type",
                   this.state.userType
+                )}
+                {data.picture && (
+                  <AvatarImage
+                    alt={data.firstName}
+                    src={data.picture.filePath}
+                    styleClass="large"
+                  />
                 )}
                 {this.renderFileUpload("file", "Upload Picture")}
                 {/* is Admin checkbox */}

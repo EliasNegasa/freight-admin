@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import _ from "lodash";
 import { Link } from "react-router-dom";
 import { paginate } from "../../utils/paginate";
-import { getAccounts } from "../../services/accountService";
+import { filterAccounts, getAccounts } from "../../services/accountService";
 import { StyledButton } from "../styled-components/button";
 import AccountsTable from "./accountsTable";
 import Pagination from "../common/pagination";
@@ -24,7 +24,7 @@ class Accounts extends Component {
 
   async componentDidMount() {
     this.setState({ loading: true });
-    const { data: accounts } = await getAccounts();
+    const { data: accounts } = await filterAccounts("deleted=false");
     this.setState({ accounts, loading: false });
   }
 

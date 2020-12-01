@@ -3,7 +3,7 @@ import _ from "lodash";
 import { StyledTd, StyledTr } from "../styled-components/styledTable";
 import { StyledBadge } from "../styled-components/containers";
 import { ContactsOutlined } from "@material-ui/icons";
-import moment from "moment";
+import { formatDate } from "../../utils/formatDate";
 
 class TableBody extends Component {
   renderCell = (item, column) => {
@@ -14,9 +14,9 @@ class TableBody extends Component {
       return <StyledBadge inactive>InActive</StyledBadge>;
     else if (
       typeof cellData === "string" &&
-      cellData.includes("T00:00:00.000Z")
+      cellData.includes(".000Z")
     )
-      return moment(new Date(cellData)).format("DD-MMM-YYYY").toString();
+      return formatDate(cellData);
     return cellData;
   };
 

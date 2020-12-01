@@ -28,5 +28,5 @@ export function deleteAccount(accountId) {
 }
 
 export function filterAccounts(query) {
-  return http.get(apiEndpoint);
+  return http.get(`${apiEndpoint}/${query}`);
 }

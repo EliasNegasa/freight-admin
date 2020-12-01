@@ -3,6 +3,7 @@ import Form from "./common/form";
 import { StyledCard } from "./styled-components/card";
 import { StyledSubHeading } from "./styled-components/heading";
 import { register } from "../services/userService";
+import { StyledFormContainer } from "./styled-components/styledForm";
 
 const Joi = require("joi-browser");
 
@@ -35,11 +36,9 @@ class RegisterForm extends Form {
   doSubmit = async () => {
     try {
       await register(this.state.data);
-      // auth.loginWithJwt(headers["Authorization"]);
-
-      // window.location = "/";
+      window.location = "/";
     } catch (ex) {
-      console.log(ex.response)
+      console.log(ex.response);
       if (ex.response && ex.response.status === 400) {
         const errors = { ...this.state.errors };
         errors.email = "Email already registered"; //ex.response.data;
@@ -52,16 +51,20 @@ class RegisterForm extends Form {
     return (
       <StyledCard big>
         <StyledSubHeading>Register</StyledSubHeading>
-        <form onSubmit={this.handleSubmit}>
-          {this.renderInput("firstName", "First Name")}
-          {this.renderInput("lastName", "Last Name")}
-          {this.renderInput("email", "Email Address", "Email")}
-          {this.renderInput("username", "Username")}
-          {this.renderInput("password", "Password", "password")}
-          {this.renderInput("phone", "Phone Number", "Number")}
-          {this.renderSelect("userType", "User Type", this.state.userType)}
-          {this.renderButton("Register")}
-        </form>
+        <StyledFormContainer oneColumn>
+          <div className="login-form">
+            <form onSubmit={this.handleSubmit}>
+              {this.renderInput("firstName", "First Name")}
+              {this.renderInput("lastName", "Last Name")}
+              {this.renderInput("email", "Email Address", "Email")}
+              {this.renderInput("username", "Username")}
+              {this.renderInput("password", "Password", "password")}
+              {this.renderInput("phone", "Phone Number", "Number")}
+              {this.renderSelect("userType", "User Type", this.state.userType)}
+              {this.renderButton("Register")}
+            </form>
+          </div>
+        </StyledFormContainer>
       </StyledCard>
     );
   }

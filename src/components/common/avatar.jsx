@@ -12,14 +12,7 @@ const useStyles = makeStyles((theme) => ({
 const AvatarImage = ({ alt, src, styleClass }) => {
   const classes = useStyles();
 
-  return (
-    <Avatar
-      alt={alt}
-      src={src}
-      // src="https://s3-us-west-1.amazonaws.com/acropolis-wp-content-uploads/excavator1.jpg"
-      className={classes[styleClass]}
-    />
-  );
+  return <Avatar alt={alt} src={src} className={classes[styleClass]} />;
 };
 
 export default AvatarImage;

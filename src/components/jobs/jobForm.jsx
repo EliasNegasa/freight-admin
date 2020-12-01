@@ -6,7 +6,7 @@ import Spinner from "../common/spinner";
 import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
 import { saveFile } from "../../services/fileService";
-import { getAccounts } from "../../services/accountService";
+import { filterAccounts } from "../../services/accountService";
 import { getMachines } from "../../services/machineService";
 import Notification from "../common/notification";
 
@@ -91,7 +91,7 @@ export class JobForm extends Form {
 
   async getUserOptions() {
     this.setState({ loading: true });
-    const { data } = await getAccounts();
+    const { data } = await filterAccounts("userType=Lowbeds Owner");
     const options = data.map((d) => ({
       value: d.id,
       label: `${d.firstName} ${d.lastName}`,

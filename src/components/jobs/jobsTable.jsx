@@ -8,22 +8,19 @@ class JobsTable extends Component {
   columns = [
     { path: "title", label: "Job Title" },
     { path: "pickUpDate", label: "Pick-up Date" },
-    { path: "pickUpAddress.city", label: "Pick-up Address", typo: "date" },
+    { path: "pickUpAddress.city", label: "Pick-up Address" },
     { path: "dropOffpDate", label: "Drop-off Date" },
     { path: "dropOffAddress.city", label: "Drop-off Address" },
-    { path: "weight", label: "Weight" },
-    { path: "distance", label: "Distance" },
-    // { path: "offRoadDistance", label: "Off-road Distance" },
     { path: "status", label: "Status" },
     { path: "user.firstName", label: "Posted By" },
     {
       key: "edit",
-      content: (account) => (
+      content: (job) => (
         <div>
-          <Link to={`/jobs/${account.id}`}>
+          <Link to={`/jobs/${job.id}`}>
             <EditOutlinedIcon style={{ color: "#f9b115" }} />
           </Link>
-          <Link to={`/jobs/${account.id}/details`}>
+          <Link to={`/jobs/${job.id}/details`}>
             <VisibilityOutlinedIcon style={{ color: "#000" }} />
           </Link>
         </div>

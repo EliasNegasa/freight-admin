@@ -21,3 +21,7 @@ export function saveJob(job) {
 export function deleteJob(jobId) {
     return http.delete(`${apiEndpoint}/${jobId}`);
 }
+
+export function filterJobs(query) {
+    return http.get(`${apiEndpoint}/${query}`);
+}

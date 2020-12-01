@@ -1,7 +1,7 @@
 import http from "./httpService";
 import { apiUrl } from "../config.json";
 
-const apiEndpoint = `${apiUrl}/api/user`;
+const apiEndpoint = `${apiUrl}/auth/register`;
 
 export function register(user) {
   let request = {

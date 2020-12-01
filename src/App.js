@@ -25,7 +25,7 @@ import Lowbeds from "./components/lowbed/lowbeds";
 import LowbedForm from "./components/lowbed/lowbedForm";
 import ReactNotification from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
-import Notification from "./components/common/notification";
+import JobDetails from "./components/jobs/jobDetails";
 
 
 class App extends Component {
@@ -70,6 +70,7 @@ class App extends Component {
                 <Route path="/accounts" component={Accounts} />
                 <Route path='/machines/:id' component={MachineForm} />
                 <Route path='/machines' component={Machine} />
+                <Route path="/jobs/:id/details" component={JobDetails} />
                 <Route path='/jobs/:id' component={JobForm} />
                 <Route path='/jobs' component={Jobs} />
                 <Route path='/lowbeds/:id' component={LowbedForm} />
