@@ -41,7 +41,7 @@ class LoginForm extends Form {
 
   render() {
     return (
-      <StyledCard big>
+      <StyledCard big loginCard>
         <StyledSubHeading>Login</StyledSubHeading>
         {this.state.confirmed && (
           <Message success role="alert">

@@ -183,3 +183,8 @@ export const StyledPaginationContainer = styled.div`
     max-width: 58.33333333%;
     }
 `
+
+export const StyledChart = styled.div`
+  width: 50%;
+  min-width: 300px;
+`

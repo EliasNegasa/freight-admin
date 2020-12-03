@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { getJob } from "../../services/jobService";
 import DetailTable from "../common/detailTable";
 import { StyledCard } from "../styled-components/card";
+import { StyledFlex } from "../styled-components/containers";
 
 class JobDetails extends Component {
   rows = {
@@ -37,10 +38,10 @@ class JobDetails extends Component {
   render() {
     const { job } = this.state;
     return (
-      <>
+      <StyledFlex>
         <StyledCard big left smallShadow>
           <div style={{ textAlign: "center" }}>
-            <strong>Job Information</strong>
+            <strong>Load Information</strong>
           </div>
           <DetailTable data={job} rows={this.rows.jobRow} />
         </StyledCard>
@@ -50,7 +51,7 @@ class JobDetails extends Component {
           </div>
           <DetailTable data={job} rows={this.rows.pickUpAddressRow} />
         </StyledCard>
-      </>
+      </StyledFlex>
     );
   }
 }
