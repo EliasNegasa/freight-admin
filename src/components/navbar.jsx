@@ -41,6 +41,11 @@ const NavBar = () => {
           <SpeakerNotesOutlinedIcon /> Requests
         </NavLink>
       </StyledNav>
+      <StyledNav>
+        <NavLink className="nav-link" to="/prices">
+          <SpeakerNotesOutlinedIcon /> Price Book
+        </NavLink>
+      </StyledNav>
     </ul>
   );
 };
