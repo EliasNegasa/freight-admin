@@ -43,7 +43,6 @@ export const StyledHeader = styled.div`
     top: 0;
     right: 0;
     left: 0;
-    z-index: 1029;
     position: sticky;
     display: -ms-flexbox;
     display: flex;

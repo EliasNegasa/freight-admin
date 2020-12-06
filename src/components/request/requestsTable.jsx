@@ -19,9 +19,6 @@ class RequestsTable extends Component {
           <Link to={`/requests/${request.id}`}>
             <EditOutlinedIcon style={{ color: "#f9b115" }} />
           </Link>
-          <Link to={`/requests/${request.id}/details`}>
-            <VisibilityOutlinedIcon style={{ color: "#000" }} />
-          </Link>
         </div>
       ),
     },

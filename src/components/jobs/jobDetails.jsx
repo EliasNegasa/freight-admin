@@ -3,6 +3,7 @@ import { getJob } from "../../services/jobService";
 import DetailTable from "../common/detailTable";
 import { StyledCard } from "../styled-components/card";
 import { StyledFlex } from "../styled-components/containers";
+import { StyledSubHeading } from "../styled-components/heading";
 
 class JobDetails extends Component {
   rows = {
@@ -38,20 +39,24 @@ class JobDetails extends Component {
   render() {
     const { job } = this.state;
     return (
-      <StyledFlex>
-        <StyledCard big left smallShadow>
-          <div style={{ textAlign: "center" }}>
-            <strong>Load Information</strong>
-          </div>
-          <DetailTable data={job} rows={this.rows.jobRow} />
-        </StyledCard>
-        <StyledCard big left smallShadow>
-          <div style={{ textAlign: "center" }}>
-            <strong>Job Information</strong>
-          </div>
-          <DetailTable data={job} rows={this.rows.pickUpAddressRow} />
-        </StyledCard>
-      </StyledFlex>
+      <>
+        <StyledSubHeading left>Job Details</StyledSubHeading>
+
+        <StyledFlex>
+          <StyledCard big left smallShadow>
+            <div style={{ textAlign: "center" }}>
+              <strong>Load Information</strong>
+            </div>
+            <DetailTable data={job} rows={this.rows.jobRow} />
+          </StyledCard>
+          <StyledCard big left smallShadow>
+            <div style={{ textAlign: "center" }}>
+              <strong>Job Information</strong>
+            </div>
+            <DetailTable data={job} rows={this.rows.pickUpAddressRow} />
+          </StyledCard>
+        </StyledFlex>
+      </>
     );
   }
 }

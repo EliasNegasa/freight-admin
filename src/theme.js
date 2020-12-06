@@ -64,6 +64,13 @@ ul.pagination-ul {
 .MuiInputLabel-outlined {
   z-index: 0 !important;
 }
+.logoutButton {
+  cursor: pointer;
+  margin-right: 0 !important;
+}
+.makeStyles-paper-1 span {
+  cursor: pointer;
+}
   `;
 
 
