@@ -9,6 +9,8 @@ import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import { Link } from "react-router-dom";
 import Spinner from "../common/spinner";
 import RequestsTable from "./requestsTable";
+import Pagination from "../common/pagination";
+import { StyledPaginationContainer } from "../styled-components/containers";
 
 class Requests extends Component {
   state = {
@@ -52,8 +54,14 @@ class Requests extends Component {
     if (searchQuery)
       filtered = allRequests.filter(
         (r) =>
-          r.userId.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-          r.jobId.toLowerCase().startsWith(searchQuery.toLowerCase())
+          r.user.firstName
+            .toLowerCase()
+            .startsWith(searchQuery.toLowerCase()) ||
+          r.job.title.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
+          r.job.userId.startsWith(searchQuery.toLowerCase()) ||
+          r.job.lowbed.licensePlate
+            .toLowerCase()
+            .startsWith(searchQuery.toLowerCase())
       );
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
@@ -75,7 +83,7 @@ class Requests extends Component {
           <Link to="/requests/new">Add Request</Link>
         </StyledButton>
         <SearchBox value={this.searchQuery} onChange={this.handleSearch} />
-      
+
         <RequestsTable
           requests={requests}
           sortColumn={sortColumn}
@@ -84,7 +92,16 @@ class Requests extends Component {
           onSort={this.handleSort}
         />
         {loading && <Spinner />}
-        
+
+        <StyledPaginationContainer>
+          <p>Showing {totalCount} Requests</p>
+          <Pagination
+            itemCount={totalCount}
+            pageSize={pageSize}
+            currentPage={currentPage}
+            onPageChange={this.handlePageChange}
+          />
+        </StyledPaginationContainer>
       </>
     );
   }

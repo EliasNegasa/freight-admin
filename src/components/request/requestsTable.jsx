@@ -3,11 +3,15 @@ import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import { Link } from "react-router-dom";
 import Table from "../common/table";
+import { getRequest } from "../../services/requestService";
 
 class RequestsTable extends Component {
   columns = [
-    { path: "title", label: "Requester" },
-    { path: "user.firstName", label: "Job Owner" },
+    { path: "user.firstName", label: "Requester" },
+    { path: "job.title", label: "Job" },
+    { path: "job.userId", label: "Job Owner" },
+    { path: "lowbed.licensePlate", label: "Assigned Lowbed" },
+    { path: "status", label: "Status" },
     {
       key: "edit",
       content: (request) => (
@@ -23,6 +27,13 @@ class RequestsTable extends Component {
     },
   ];
   state = {};
+
+  async componentDidMount() {
+    const { data: jobUser } = await getRequest();
+    console.log("JOB USER DATA", jobUser);
+    this.setState({ jobUser });
+  }
+
   render() {
     const { requests, onSort, sortColumn } = this.props;
     return (
