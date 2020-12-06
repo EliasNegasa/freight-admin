@@ -10,22 +10,26 @@ import BarChart from "./chart/barChart";
 import { filterAccounts } from "../services/accountService";
 import { getJobs } from "../services/jobService";
 import { getLowbeds } from "../services/lowbedService";
+import { getRequests } from "../services/requestService";
 
 class Home extends Component {
   state = {
     numberOfAccounts: "",
     numberOfJobs: "",
-    numberOflowbeds: "",
+    numberOfLowbeds: "",
+    numberOfRequests: "",
   };
 
   async componentDidMount() {
     const { data: accounts } = await filterAccounts("deleted=false");
     const { data: jobs } = await getJobs();
     const { data: lowbeds } = await getLowbeds();
+    const { data: requests } = await getRequests();
     this.setState({
       numberOfAccounts: accounts.length,
       numberOfJobs: jobs.length,
-      numberOflowbeds: lowbeds.length,
+      numberOfLowbeds: lowbeds.length,
+      numberOfRequests: requests.length,
     });
   }
 
@@ -49,13 +53,13 @@ class Home extends Component {
           <DashboardBox
             yellow
             label="Registered Lowbeds"
-            value={data.numberOflowbeds}
+            value={data.numberOfLowbeds}
             icon={<LocalShippingOutlinedIcon />}
           />
           <DashboardBox
             black
             label="Requestss"
-            value="0"
+            value={data.numberOfRequests}
             icon={<SpeakerNotesOutlinedIcon />}
           />
         </StyledFlex>
