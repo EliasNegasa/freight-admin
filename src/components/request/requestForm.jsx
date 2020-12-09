@@ -8,6 +8,8 @@ import { getLowbed } from "../../services/lowbedService";
 import Spinner from "../common/spinner";
 import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
+import BackdropLoader from "../common/Backdrop";
+import Notification from "../common/notification";
 
 const Joi = require("joi-browser");
 
@@ -25,6 +27,7 @@ class RequestForm extends Form {
     statusOptions: ["Open", "Closed", "Pending"],
     errors: {},
     loading: false,
+    backdrop: false,
     message: "",
   };
 
@@ -103,6 +106,7 @@ class RequestForm extends Form {
 
     console.log("Data", data);
 
+    this.setState({ backdrop: true });
     try {
       const { data: request } = await saveRequest(data);
       this.setState({
@@ -111,6 +115,7 @@ class RequestForm extends Form {
           : "request created Successfully",
         messageType: "success",
         messageTitle: "Success",
+        backdrop: false,
       });
       console.log("Saved");
       this.props.history.push("/requests");
@@ -121,18 +126,33 @@ class RequestForm extends Form {
           message: error.message,
           messageType: "danger",
           messageTitle: "Error",
+          backdrop: false,
         });
       }
     }
   };
 
   render() {
-    const { loading, message, messageType, messageTitle } = this.state;
+    const {
+      backdrop,
+      loading,
+      message,
+      messageType,
+      messageTitle,
+    } = this.state;
     return (
       <>
+        {backdrop && <BackdropLoader />}
         {loading && <Spinner />}
         {!loading && (
           <>
+            {message && (
+              <Notification
+                title={messageTitle}
+                message={message}
+                type={messageType}
+              />
+            )}
             <StyledSubHeading left>
               {this.state.data.id ? <span>Edit </span> : <span>Add </span>}
               Request

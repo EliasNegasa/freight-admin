@@ -9,6 +9,7 @@ import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
 import { filterMachines } from "../../services/machineService";
 import Notification from "../common/notification";
+import BackdropLoader from "../common/Backdrop";
 
 const Joi = require("joi-browser");
 
@@ -37,6 +38,7 @@ class LowbedForm extends Form {
     machineSelectOptions: [],
     errors: {},
     loading: false,
+    backdrop: false,
     message: "",
   };
 
@@ -147,6 +149,7 @@ class LowbedForm extends Form {
     ]);
 
     console.log("Lowbed Data", lowbedData);
+    this.setState({ backdrop: true });
     try {
       const { data: lowbed } = await saveLowbed(lowbedData);
 
@@ -167,6 +170,7 @@ class LowbedForm extends Form {
           : "Lowbed created Successfully",
         messageType: "success",
         messageTitle: "Success",
+        backdrop: false,
       });
 
       console.log("Saved");
@@ -178,15 +182,23 @@ class LowbedForm extends Form {
           message: error.message,
           messageType: "danger",
           messageTitle: "Error",
+          backdrop: false,
         });
       }
     }
   };
 
   render() {
-    const { loading, message, messageType, messageTitle } = this.state;
+    const {
+      backdrop,
+      loading,
+      message,
+      messageType,
+      messageTitle,
+    } = this.state;
     return (
       <>
+        {backdrop && <BackdropLoader />}
         {loading && <Spinner />}
         {!loading && (
           <>

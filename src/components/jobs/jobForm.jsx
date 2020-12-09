@@ -9,6 +9,7 @@ import { saveFile } from "../../services/fileService";
 import { filterAccounts } from "../../services/accountService";
 import { getMachines } from "../../services/machineService";
 import Notification from "../common/notification";
+import BackdropLoader from "../common/Backdrop";
 
 const Joi = require("joi-browser");
 
@@ -46,6 +47,7 @@ export class JobForm extends Form {
     machineSelectOptions: [],
     errors: {},
     loading: false,
+    backdrop: false,
     message: "",
   };
 
@@ -193,6 +195,7 @@ export class JobForm extends Form {
       "pickUpDate",
       "dropOffpDate",
       "weight",
+      "width",
       "height",
       "length",
       "quantity",
@@ -219,6 +222,7 @@ export class JobForm extends Form {
     };
 
     console.log("JOB Data", jobData);
+    this.setState({ backdrop: true });
     try {
       const { data: job } = await saveJob(jobData);
 
@@ -241,6 +245,7 @@ export class JobForm extends Form {
           : "Job created Successfully",
         messageType: "success",
         messageTitle: "Success",
+        backdrop: false,
       });
       console.log("Saved");
       this.props.history.push("/jobs");
@@ -251,15 +256,24 @@ export class JobForm extends Form {
           message: error.message,
           messageType: "danger",
           messageTitle: "Error",
+          backdrop: false,
         });
       }
     }
   };
 
   render() {
-    const { loading, message, messageType, messageTitle } = this.state;
+    const {
+      backdrop,
+      loading,
+      message,
+      messageType,
+      messageTitle,
+    } = this.state;
     return (
       <>
+        {backdrop && <BackdropLoader />}
+
         {loading && <Spinner />}
         {!loading && (
           <>

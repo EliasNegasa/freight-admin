@@ -8,6 +8,7 @@ import Spinner from "../common/spinner";
 import { saveFile } from "../../services/fileService";
 import Notification from "../common/notification";
 import AvatarImage from "../common/avatar";
+import BackdropLoader from "../common/Backdrop";
 
 const Joi = require("joi-browser");
 
@@ -34,6 +35,7 @@ class AccountForm extends Form {
     userType: ["Machinery Owner", "Lowbeds Owner", "Admin"],
     errors: {},
     loading: false,
+    backdrop: false,
     message: "",
   };
 
@@ -139,9 +141,9 @@ class AccountForm extends Form {
       company,
       phone: companyPhone,
     };
+    this.setState({ backdrop: true });
     try {
       const { data: account } = await saveAccount(userData);
-
       const userId = account.id ? account.id : account.result.id;
 
       if (data.file) {
@@ -159,6 +161,7 @@ class AccountForm extends Form {
           : "User created Successfully",
         messageType: "success",
         messageTitle: "Success",
+        backdrop: false,
       });
       console.log("Saved");
       this.props.history.push("/accounts");
@@ -169,15 +172,24 @@ class AccountForm extends Form {
           message: error.message,
           messageType: "danger",
           messageTitle: "Error",
+          backdrop: false,
         });
       }
     }
   };
 
   render() {
-    const { loading, message, messageType, messageTitle, data } = this.state;
+    const {
+      backdrop,
+      loading,
+      message,
+      messageType,
+      messageTitle,
+      data,
+    } = this.state;
     return (
       <>
+        {backdrop && <BackdropLoader />}
         {loading && <Spinner />}
         {!loading && (
           <>
