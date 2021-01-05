@@ -112,7 +112,6 @@ class AccountForm extends Form {
     } = this.state;
     return (
       <>
-        {console.log("USERS", this.state.userSelectOptions)}
         {backdrop && <BackdropLoader />}
         {loading && <Spinner />}
         {!loading && (
