@@ -6,7 +6,7 @@ import { StyledListGroup, StylesList } from "../styled-components/lists";
 import { filterJobs } from "../../services/jobService";
 import { formatDate } from "../../utils/formatDate";
 
-class AccountJobDetails extends Component {
+class UserJobDetails extends Component {
   state = {
     userJobs: [],
     loading: false,
@@ -51,4 +51,4 @@ class AccountJobDetails extends Component {
   }
 }
 
-export default AccountJobDetails;
+export default UserJobDetails;

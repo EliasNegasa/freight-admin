@@ -1,15 +1,30 @@
 import React from "react";
-import TableBody from "./tableBody";
-import TableHeader from "./tableHeader";
-import { StyledTable } from "../styled-components/styledTable";
+import TBody from "./tableBody";
+import THead from "./tableHeader";
+import { Table } from "@material-ui/core";
 
-const Table = ({ columns, sortColumn, data, onSort }) => {
+const TableBox = ({ columns, sortColumn, data, onSort }) => {
   return (
-    <StyledTable>
-      <TableHeader columns={columns} onSort={onSort} sortColumn={sortColumn} />
-      <TableBody data={data} columns={columns} />
-    </StyledTable>
+    <>
+      <br />
+      <Table size="small">
+        <THead columns={columns} onSort={onSort} sortColumn={sortColumn} />
+
+        <TBody data={data} columns={columns} />
+      </Table>
+    </>
   );
 };
 
-export default Table;
+export default TableBox;
+
+{
+  /* <TableHeader
+          columns={columns}
+          onSort={onSort}
+          sortColumn={sortColumn}
+        /> */
+}
+{
+  /* <TableBody data={data} columns={columns} /> */
+}

@@ -1,9 +1,9 @@
 import React from "react";
-import Form from "./common/form";
-import { StyledCard } from "./styled-components/card";
-import { StyledSubHeading } from "./styled-components/heading";
-import { register } from "../services/userService";
-import { StyledFormContainer } from "./styled-components/styledForm";
+import Form from "../common/form";
+import { StyledCard } from "../styled-components/card";
+import { StyledSubHeading } from "../styled-components/heading";
+import { register } from "../../services/regService";
+import { StyledFormContainer } from "../styled-components/styledForm";
 
 const Joi = require("joi-browser");
 
@@ -39,9 +39,12 @@ class RegisterForm extends Form {
       window.location = "/";
     } catch (ex) {
       console.log(ex.response);
-      if (ex.response && ex.response.status === 400) {
+      if (
+        (ex.response && ex.response.status === 400) ||
+        (ex.response && ex.response.status === 500)
+      ) {
         const errors = { ...this.state.errors };
-        errors.email = "Email already registered"; //ex.response.data;
+        errors.email = "Error Occured"; //ex.response.data;
         this.setState({ errors });
       }
     }
@@ -49,7 +52,7 @@ class RegisterForm extends Form {
 
   render() {
     return (
-      <StyledCard big>
+      <StyledCard big loginCard>
         <StyledSubHeading>Register</StyledSubHeading>
         <StyledFormContainer oneColumn>
           <div className="login-form">

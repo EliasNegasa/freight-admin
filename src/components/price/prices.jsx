@@ -1,27 +1,27 @@
 import React, { Component } from "react";
-import { getMachines } from "../../services/machineService";
 import Spinner from "../common/spinner";
 import { StyledSubHeading } from "../styled-components/heading";
-import MachineList from "./machineList";
+import { getPrices } from "../../services/priceService";
+import PriceList from "./priceList";
 
-class Machine extends Component {
+class Price extends Component {
   state = {
-    machines: [],
+    prices: [],
     loading: false,
     isUpdated: false,
   };
 
   async componentDidMount() {
     this.setState({ loading: true });
-    const { data: machines } = await getMachines();
-    this.setState({ machines, loading: false });
+    const { data: prices } = await getPrices();
+    this.setState({ prices, loading: false });
   }
 
   async componentDidUpdate(prevProps, prevState) {
     if (prevState.isUpdated !== this.state.isUpdated) {
       // this.setState({ loading: true });
-      const { data: machines } = await getMachines();
-      this.setState({ machines, isUpdated: false });
+      const { data: prices } = await getPrices();
+      this.setState({ prices, isUpdated: false });
     }
   }
 
@@ -30,16 +30,16 @@ class Machine extends Component {
   };
 
   render() {
-    const { machines, loading } = this.state;
+    const { prices, loading } = this.state;
 
     return (
       <>
-        <StyledSubHeading left>Machine List</StyledSubHeading>
+        <StyledSubHeading left>Price Rate List</StyledSubHeading>
         {loading && <Spinner />}
-        <MachineList machines={machines} onUpdated={this.handleIsUpdated} />
+        <PriceList prices={prices} onUpdated={this.handleIsUpdated} />
       </>
     );
   }
 }
 
-export default Machine;
+export default Price;

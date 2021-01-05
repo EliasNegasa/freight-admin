@@ -1,35 +1,35 @@
 import React, { Component } from "react";
 import _ from "lodash";
-import { getLowbeds } from "../../services/lowbedService";
-import { StyledSubHeading } from "../styled-components/heading";
 import { paginate } from "../../utils/paginate";
-import LowbedsTable from "./lowbedsTable";
-import { StyledPaginationContainer } from "../styled-components/containers";
 import Pagination from "../common/pagination";
+import { StyledPaginationContainer } from "../styled-components/containers";
+import { StyledSubHeading } from "../styled-components/heading";
 import Spinner from "../common/spinner";
+import AccountsTable from "./accountsTable";
+import { getAccounts } from "../../services/accountService";
 
-class Lowbeds extends Component {
+class Account extends Component {
   state = {
-    lowbeds: [],
+    accounts: [],
     currentPage: 1,
     pageSize: 10,
     searchQuery: "",
-    sortColumn: { path: "licensePlate", order: "asc" },
+    sortColumn: { path: "firstname", order: "asc" },
     loading: false,
     isUpdated: false,
   };
 
   async componentDidMount() {
     this.setState({ loading: true });
-    const { data: lowbeds } = await getLowbeds();
-    this.setState({ lowbeds, loading: false });
+    const { data: accounts } = await getAccounts();
+    this.setState({ accounts, loading: false });
   }
 
   async componentDidUpdate(prevProps, prevState) {
     if (prevState.isUpdated !== this.state.isUpdated) {
       this.setState({ loading: true });
-      const { data: lowbeds } = await getLowbeds();
-      this.setState({ lowbeds, loading: false, isUpdated: false });
+      const { data: accounts } = await getAccounts();
+      this.setState({ accounts, loading: false, isUpdated: false });
     }
   }
 
@@ -55,44 +55,37 @@ class Lowbeds extends Component {
       currentPage,
       searchQuery,
       sortColumn,
-      lowbeds: allLowbeds,
+      accounts: allAccounts,
     } = this.state;
 
-    let filtered = allLowbeds;
+    let filtered = allAccounts;
     if (searchQuery)
-      filtered = allLowbeds.filter(
-        (lowbed) =>
-          lowbed.licensePlate
+      filtered = allAccounts.filter(
+        (account) =>
+          account.firstName
             .toLowerCase()
             .startsWith(searchQuery.toLowerCase()) ||
-          lowbed.motorNo.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-          lowbed.user.firstName
+          account.lastName
             .toLowerCase()
             .startsWith(searchQuery.toLowerCase()) ||
-          lowbed.name.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-          lowbed.user.lastName
-            .toLowerCase()
-            .startsWith(searchQuery.toLowerCase()) ||
-          lowbed.chassieNo.toLowerCase().startsWith(searchQuery.toLowerCase())
+          account.email.toLowerCase().startsWith(searchQuery.toLowerCase())
       );
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
-    const lowbeds = paginate(sorted, currentPage, pageSize);
-    return { totalCount: filtered.length, data: lowbeds };
+    const accounts = paginate(sorted, currentPage, pageSize);
+    return { totalCount: filtered.length, data: accounts };
   };
 
   render() {
     const { pageSize, currentPage, sortColumn, loading } = this.state;
 
-    const { totalCount, data: lowbeds } = this.getPagedData();
-
+    const { totalCount, data: accounts } = this.getPagedData();
     return (
       <>
-        <StyledSubHeading left>Registered Machineries</StyledSubHeading>
-
-        <LowbedsTable
-          lowbeds={lowbeds}
+        <StyledSubHeading left>Accounts</StyledSubHeading>
+        <AccountsTable
+          accounts={accounts}
           sortColumn={sortColumn}
           onSort={this.handleSort}
           onSearchChange={this.handleSearch}
@@ -102,7 +95,7 @@ class Lowbeds extends Component {
         {loading && <Spinner />}
 
         <StyledPaginationContainer>
-          <p>Showing {totalCount} Machineries</p>
+          <p>Showing {totalCount} Accounts</p>
           <Pagination
             itemCount={totalCount}
             pageSize={pageSize}
@@ -115,4 +108,4 @@ class Lowbeds extends Component {
   }
 }
 
-export default Lowbeds;
+export default Account;

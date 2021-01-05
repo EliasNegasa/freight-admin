@@ -1,10 +1,6 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import _ from "lodash";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import Pagination from "../common/pagination";
-import SearchBox from "../common/searchBox";
-import { StyledButton } from "../styled-components/button";
 import { StyledPaginationContainer } from "../styled-components/containers";
 import { StyledSubHeading } from "../styled-components/heading";
 import Spinner from "../common/spinner";
@@ -20,6 +16,7 @@ class Jobs extends Component {
     searchQuery: "",
     sortColumn: { path: "title", order: "asc" },
     loading: false,
+    isUpdated: false,
   };
 
   async componentDidMount() {
@@ -29,6 +26,18 @@ class Jobs extends Component {
     // const { data: jobUser } = await getAccount(this.state.jobs.userId);
     this.setState({ jobs, loading: false });
   }
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevState.isUpdated !== this.state.isUpdated) {
+      this.setState({ loading: true });
+      const { data: jobs } = await getJobs();
+      this.setState({ jobs, loading: false, isUpdated: false });
+    }
+  }
+
+  handleIsUpdated = () => {
+    this.setState({ isUpdated: true });
+  };
 
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
@@ -57,7 +66,7 @@ class Jobs extends Component {
         (j) =>
           j.title.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
           j.pickUpDate.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-          j.dropOffpDate.toLowerCase().startsWith(searchQuery.toLowerCase()) 
+          j.dropOffpDate.toLowerCase().startsWith(searchQuery.toLowerCase())
       );
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
@@ -74,17 +83,14 @@ class Jobs extends Component {
     return (
       <>
         <StyledSubHeading left>Jobs List</StyledSubHeading>
-        <StyledButton square right>
-          <PersonAddIcon />
-          <Link to="/jobs/new">Add Job</Link>
-        </StyledButton>
-        <SearchBox value={this.searchQuery} onChange={this.handleSearch} />
+
         <JobsTable
           jobs={jobs}
           sortColumn={sortColumn}
-          onDelete={this.handleDelete}
-          onLike={this.handleLike}
           onSort={this.handleSort}
+          onSearchChange={this.handleSearch}
+          searchValue={this.searchQuery}
+          onUpdated={this.handleIsUpdated}
         />
         {loading && <Spinner />}
 

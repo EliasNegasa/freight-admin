@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import Input from "./input";
-import { StyledButton } from "../styled-components/button";
+import SaveIcon from "@material-ui/icons/Save";
 import TextArea from "./textArea";
 import { Checkbox, FormControlLabel } from "@material-ui/core";
 import FileUplaod from "./fileUpload";
 import SelectInput from "./select";
 import PreloadedSelect from "./preloadedSelect";
 import DatePickerBox from "./datePickerBox";
-import { parseISO } from "date-fns";
-import Spinner from "../common/spinner";
+import ActionButton from "./button";
+import { StyledButton } from "../styled-components/button";
 
 const Joi = require("joi-browser");
 
@@ -85,9 +85,15 @@ class Form extends Component {
   };
 
   renderButton = (label) => {
+    if (label === "Save") {
+      return (
+        <StyledButton square right>
+          <SaveIcon /> {label}
+        </StyledButton>
+      );
+    }
     return (
-      // disabled={this.validate()}
-      <StyledButton square right>
+      <StyledButton square right noIcon>
         {label}
       </StyledButton>
     );
@@ -120,7 +126,7 @@ class Form extends Component {
             errors={errors[name]}
           />
         }
-        label="Lowbed"
+        label={label}
       />
     );
   };

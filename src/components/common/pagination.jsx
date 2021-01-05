@@ -2,6 +2,7 @@ import React from "react";
 import _ from "lodash";
 import PropTypes from "prop-types";
 import { StyledPage } from "./../styled-components/styledTable";
+import { TablePagination } from "@material-ui/core";
 
 const Pagination = ({ itemCount, pageSize, currentPage, onPageChange }) => {
   const pagesCount = Math.ceil(itemCount / pageSize);
@@ -9,17 +10,19 @@ const Pagination = ({ itemCount, pageSize, currentPage, onPageChange }) => {
   const pages = _.range(1, pagesCount + 1);
 
   return (
-    <ul className="pagination-ul">
-      {pages.map((page) => (
-        <StyledPage
-          key={page}
-          className={page === currentPage ? "page-item active" : "page-item"}
-          onClick={() => onPageChange(page)}
-        >
-          {page}
-        </StyledPage>
-      ))}
-    </ul>
+    <>
+      <ul className="pagination-ul">
+        {pages.map((page) => (
+          <StyledPage
+            key={page}
+            className={page === currentPage ? "page-item active" : "page-item"}
+            onClick={() => onPageChange(page)}
+          >
+            {page}
+          </StyledPage>
+        ))}
+      </ul>
+    </>
   );
 };
 

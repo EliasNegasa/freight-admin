@@ -1,32 +1,41 @@
 import React, { Component } from "react";
 import _ from "lodash";
-import { Link } from "react-router-dom";
 import { paginate } from "../../utils/paginate";
-import { filterAccounts, getAccounts } from "../../services/accountService";
-import { StyledButton } from "../styled-components/button";
-import AccountsTable from "./accountsTable";
+import { getUsers } from "../../services/userService";
 import Pagination from "../common/pagination";
 import { StyledPaginationContainer } from "../styled-components/containers";
 import { StyledSubHeading } from "../styled-components/heading";
-import SearchBox from "../common/searchBox";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import Spinner from "../common/spinner";
+import UsersTable from "./usersTable";
 
-class Accounts extends Component {
+class Users extends Component {
   state = {
-    accounts: [],
+    users: [],
     currentPage: 1,
     pageSize: 10,
     searchQuery: "",
     sortColumn: { path: "firstname", order: "asc" },
     loading: false,
+    isUpdated: false,
   };
 
   async componentDidMount() {
     this.setState({ loading: true });
-    const { data: accounts } = await filterAccounts("deleted=false");
-    this.setState({ accounts, loading: false });
+    const { data: users } = await getUsers();
+    this.setState({ users, loading: false });
   }
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevState.isUpdated !== this.state.isUpdated) {
+      this.setState({ loading: true });
+      const { data: users } = await getUsers();
+      this.setState({ users, loading: false, isUpdated: false });
+    }
+  }
+
+  handleIsUpdated = () => {
+    this.setState({ isUpdated: true });
+  };
 
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
@@ -46,47 +55,43 @@ class Accounts extends Component {
       currentPage,
       searchQuery,
       sortColumn,
-      accounts: allAccounts,
+      users: allUsers,
     } = this.state;
 
-    let filtered = allAccounts;
+    let filtered = allUsers;
     if (searchQuery)
-      filtered = allAccounts.filter(
-        (acc) =>
-          acc.firstName.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-          acc.lastName.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-          acc.email.toLowerCase().startsWith(searchQuery.toLowerCase())
+      filtered = allUsers.filter(
+        (user) =>
+          user.firstName.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
+          user.lastName.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
+          user.email.toLowerCase().startsWith(searchQuery.toLowerCase())
       );
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
 
-    const accounts = paginate(sorted, currentPage, pageSize);
-    return { totalCount: filtered.length, data: accounts };
+    const users = paginate(sorted, currentPage, pageSize);
+    return { totalCount: filtered.length, data: users };
   };
 
   render() {
     const { pageSize, currentPage, sortColumn, loading } = this.state;
 
-    const { totalCount, data: accounts } = this.getPagedData();
+    const { totalCount, data: users } = this.getPagedData();
     return (
       <>
-        <StyledSubHeading left>Accounts List</StyledSubHeading>
-        <StyledButton square right>
-          <PersonAddIcon />
-          <Link to="/accounts/new">Add Account</Link>
-        </StyledButton>
-        <SearchBox value={this.searchQuery} onChange={this.handleSearch} />
-        <AccountsTable
-          accounts={accounts}
+        <StyledSubHeading left>Users List</StyledSubHeading>
+        <UsersTable
+          users={users}
           sortColumn={sortColumn}
-          onDelete={this.handleDelete}
-          onLike={this.handleLike}
           onSort={this.handleSort}
+          onSearchChange={this.handleSearch}
+          searchValue={this.searchQuery}
+          onUpdated={this.handleIsUpdated}
         />
         {loading && <Spinner />}
 
         <StyledPaginationContainer>
-          <p>Showing {totalCount} Accounts</p>
+          <p>Showing {totalCount} Users</p>
           <Pagination
             itemCount={totalCount}
             pageSize={pageSize}
@@ -99,4 +104,4 @@ class Accounts extends Component {
   }
 }
 
-export default Accounts;
+export default Users;

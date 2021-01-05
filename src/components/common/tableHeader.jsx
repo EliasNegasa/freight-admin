@@ -1,40 +1,44 @@
-import React, { Component } from "react";
-import { StyledTh, StyledTr } from "../styled-components/styledTable";
+import { makeStyles, TableCell, TableHead, TableRow } from "@material-ui/core";
+import React from "react";
 
-class TableHeader extends Component {
-  raiseSort(path) {
-    const sortColumn = { ...this.props.sortColumn };
+const useStyles = makeStyles({
+  clickable: {
+    cursor: "pointer",
+  },
+});
+
+const Thead = ({ columns, onSort, sortColumn }) => {
+  const classes = useStyles();
+  const raiseSort = (path) => {
     if (sortColumn.path === path)
       sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
     else sortColumn.path = path;
-    this.props.onSort(sortColumn);
-  }
+    onSort(sortColumn);
+  };
 
-  renderSortIcon = (column) => {
-    const { sortColumn } = this.props;
+  const renderSortIcon = (column) => {
     if (column.path !== sortColumn.path) return null;
     if (sortColumn.order === "asc") return <i className="fa fa-sort-asc"></i>;
     return <i className="fa fa-sort-desc"></i>;
   };
 
-  render() {
-    return (
-      <thead>
-        <StyledTr>
-          {this.props.columns.map((column) => (
-            <StyledTh
-              className="clickable"
-              key={column.path || column.key}
-              onClick={() => this.raiseSort(column.path)}
-              scope="col"
-            >
-              {column.label} {this.renderSortIcon(column)}
-            </StyledTh>
-          ))}
-        </StyledTr>
-      </thead>
-    );
-  }
-}
+  return (
+    <TableHead>
+      <TableRow>
+        <TableCell padding="checkbox"></TableCell>
+        {columns.map((column) => (
+          <TableCell
+            className={classes.clickable}
+            key={column.path || column.key}
+            onClick={() => raiseSort(column.path)}
+            scope="col"
+          >
+            <strong>{column.label}</strong> {renderSortIcon(column)}
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+  );
+};
 
-export default TableHeader;
+export default Thead;

@@ -3,13 +3,12 @@ import _ from "lodash";
 import { getJob, saveJob } from "../../services/jobService";
 import Form from "../common/form";
 import Spinner from "../common/spinner";
-import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
 import { saveFile } from "../../services/fileService";
-import { filterAccounts } from "../../services/accountService";
-import { getMachines } from "../../services/machineService";
+import { filterUsers } from "../../services/userService";
 import Notification from "../common/notification";
 import BackdropLoader from "../common/Backdrop";
+import { getMachineries } from "../../services/machineryService";
 
 const Joi = require("joi-browser");
 
@@ -22,12 +21,9 @@ export class JobForm extends Form {
       dropOffpDate: "",
       pickUpAddress: {},
       dropOffAddress: {},
-      weight: "",
-      length: "",
-      width: "",
-      height: "",
       distance: "",
       offRoadDistance: "",
+      quantity: "",
       hasOffroad: "",
       file: "",
 
@@ -41,10 +37,12 @@ export class JobForm extends Form {
       dropOffCity: "",
 
       userId: "",
-      machineId: "",
+      machineryId: "",
+      status: "",
     },
     userSelectOptions: [],
-    machineSelectOptions: [],
+    machinerySelectOptions: [],
+    statusOptions: ["open", "closed", "done"],
     errors: {},
     loading: false,
     backdrop: false,
@@ -56,10 +54,7 @@ export class JobForm extends Form {
     description: Joi.label("Job Description"),
     pickUpDate: Joi.label("Pick up Date"),
     dropOffpDate: Joi.date().label("Drop off Date"),
-    weight: Joi.number().label("Weight"),
-    length: Joi.number().label("Length"),
-    width: Joi.number().label("Width"),
-    height: Joi.number().label("Height"),
+    quantity: Joi.number().label("Quantity"),
     distance: Joi.number().label("Distance"),
     offRoadDistance: Joi.number().label("Off Road Distance"),
     hasOffroad: Joi.label("hasOffroad"),
@@ -73,12 +68,14 @@ export class JobForm extends Form {
     dropOffWoreda: Joi.label("Woreda"),
     dropOffZone: Joi.label("Zone"),
     dropOffCity: Joi.label("City"),
+
+    status: Joi.string().required().label("Job Status"),
   };
 
   populateJob = async () => {
     try {
-      const jobId = this.props.match.params.id;
-      if (jobId === "new") {
+      const jobId = this.props.id;
+      if (jobId === "") {
         this.setState({ loading: false });
         return;
       }
@@ -93,7 +90,7 @@ export class JobForm extends Form {
 
   async getUserOptions() {
     this.setState({ loading: true });
-    const { data } = await filterAccounts("userType=Lowbeds Owner");
+    const { data } = await filterUsers("userType=Machinery Owner");
     const options = data.map((d) => ({
       value: d.id,
       label: `${d.firstName} ${d.lastName}`,
@@ -102,22 +99,23 @@ export class JobForm extends Form {
     this.setState({ userSelectOptions: options });
   }
 
-  async getMachineOptions() {
+  async getMachineryOptions() {
     this.setState({ loading: true });
-    const { data } = await getMachines();
+    // const { data } = await filterMachines("isLowbed=false");
+    const { data } = await getMachineries();
     const options = data.map((d) => ({
       value: d.id,
       label: d.name,
     }));
 
-    console.log("machine options", options);
+    console.log("machinery options", options);
 
-    this.setState({ machineSelectOptions: options });
+    this.setState({ machinerySelectOptions: options });
   }
 
   async componentDidMount() {
     await this.getUserOptions();
-    await this.getMachineOptions();
+    await this.getMachineryOptions();
     await this.populateJob();
   }
 
@@ -130,14 +128,11 @@ export class JobForm extends Form {
       dropOffpDate: new Date(job.dropOffpDate),
       pickUpAddress: job.pickUpAddress,
       dropOffpAddress: job.dropOffpAddress,
-      weight: job.weight,
-      length: job.length,
-      width: job.width,
-      height: job.height,
       quantity: job.quantity,
       distance: job.distance,
       offRoadDistance: job.offRoadDistance,
       hasOffroad: job.hasOffroad,
+      status: job.status,
 
       pickUpId: job.pickUpAddress.id ? job.pickUpAddress.id : undefined,
       pickUpKebele: job.pickUpAddress.kebele
@@ -164,7 +159,7 @@ export class JobForm extends Form {
         : undefined,
 
       userId: job.userId ? job.userId : undefined,
-      machineId: job.machineId ? job.machineId : undefined,
+      machineryId: job.machineryId ? job.machineryId : undefined,
     };
   };
 
@@ -194,15 +189,12 @@ export class JobForm extends Form {
       "description",
       "pickUpDate",
       "dropOffpDate",
-      "weight",
-      "width",
-      "height",
-      "length",
       "quantity",
       "distance",
       "offRoadDistance",
       "userId",
-      "machineId",
+      "machineryId",
+      "status",
     ]);
 
     jobData.pickUpAddress = {
@@ -248,10 +240,14 @@ export class JobForm extends Form {
         backdrop: false,
       });
       console.log("Saved");
-      this.props.history.push("/jobs");
+      this.props.setOpenPopup(false);
+      this.props.setId("");
+      this.props.onUpdated();
+
+      // this.props.history.push("/jobs");
     } catch (ex) {
       if (ex.response && ex.response.status !== 200) {
-        const { error } = ex.response.data;
+        const error = ex.response.data;
         this.setState({
           message: error.message,
           messageType: "danger",
@@ -277,16 +273,14 @@ export class JobForm extends Form {
         {loading && <Spinner />}
         {!loading && (
           <>
-            {message && (
+            {message && this.props.openPopup && (
               <Notification
                 title={messageTitle}
                 message={message}
                 type={messageType}
               />
             )}
-            <StyledSubHeading left>
-              {this.state.data.id ? <span>Edit </span> : <span>Add </span>}Job
-            </StyledSubHeading>
+
             <form onSubmit={this.handleSubmit}>
               {loading && <Spinner />}
               <StyledFormContainer threeColumn>
@@ -294,25 +288,25 @@ export class JobForm extends Form {
                 {this.renderInput("title", "Job Title")}
                 {this.renderInput("description", "Job Description")}
                 {this.renderPreloadedSelect(
-                  "machineId",
+                  "machineryId",
                   "Machine Type",
-                  this.state.machineSelectOptions
+                  this.state.machinerySelectOptions
                 )}
 
-                <div className="double-field">
-                  {this.renderInput("weight", "Weight (Ton)", "number")}
-                  {this.renderInput("width", "Width (m)", "number")}
-                </div>
-                <div className="double-field">
-                  {this.renderInput("length", "Length (m)", "number")}
-                  {this.renderInput("height", "Height (m)", "number")}
-                </div>
                 <div className="double-field">
                   {this.renderInput("distance", "Distance (Km)", "number")}
                   {this.renderInput(
                     "offRoadDistance",
-                    "Off-road Distance (Km)",
+                    "Off-road (Km)",
                     "number"
+                  )}
+                </div>
+                <div className="double-field">
+                  {this.renderInput("quantity", "Quantity (m)", "number")}
+                  {this.renderSelect(
+                    "status",
+                    "Status",
+                    this.state.statusOptions
                   )}
                 </div>
                 {this.renderPreloadedSelect(
@@ -335,7 +329,7 @@ export class JobForm extends Form {
               </StyledFormContainer>
 
               <StyledFormContainer threeColumn>
-                <strong>Drop-up Address:</strong>
+                <strong>Drop-off Address:</strong>
                 {this.renderDatePicker("dropOffpDate", "Drop-Off Date")}
                 {/* {this.renderInput("dropOffpDate", "Drop-Off Date")} */}
                 {this.renderInput("dropOffKebele", "Drop-Off Kebele", "number")}

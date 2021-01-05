@@ -2,17 +2,16 @@ import React from "react";
 import { Link } from "react-router-dom";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
-import { StyledButton } from "../styled-components/button";
-import SearchBox from "../common/searchBox";
-import AddIcon from "@material-ui/icons/Add";
-import { useState } from "react";
 import Popup from "../common/popup";
-import LowbedForm from "./lowbedForm";
+import UserForm from "./userForm";
+import { useState } from "react";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
+import SearchBox from "../common/searchBox";
 import TableBox from "../common/table";
 import ActionButton from "../common/button";
 
-const LowbedsTable = ({
-  lowbeds,
+const UsersTable = ({
+  users,
   onSort,
   sortColumn,
   searchValue,
@@ -23,23 +22,23 @@ const LowbedsTable = ({
   const [id, setId] = useState("");
 
   const columns = [
-    { path: "name", label: "Name" },
-    { path: "licensePlate", label: "License Plate" },
-    { path: "user.firstName", label: "Owner" },
-    { path: "horsePower", label: "Horse Power" },
-    { path: "manufacturingYear", label: "Year of Manufacturing" },
-    { path: "madeIn", label: "Made In" },
+    { path: "firstName", label: "First Name" },
+    { path: "lastName", label: "Last Name" },
+    { path: "email", label: "Email" },
+    { path: "username", label: "Username" },
+    { path: "userType", label: "User Type" },
+    { path: "isActivated", label: "Status" },
     {
       key: "edit",
-      content: (account) => (
+      content: (user) => (
         <div>
           <span
             style={{ cursor: "pointer" }}
-            onClick={() => handleClickOpen(account.id)}
+            onClick={() => handleClickOpen(user.id)}
           >
             <EditOutlinedIcon style={{ color: "#f9b115" }} />
           </span>
-          <Link to={`/lowbeds/${account.id}/details`}>
+          <Link to={`/users/${user.id}/details`}>
             <VisibilityOutlinedIcon style={{ color: "#000" }} />
           </Link>
         </div>
@@ -56,23 +55,23 @@ const LowbedsTable = ({
     <>
       <ActionButton
         onClick={() => setOpenPopup(true)}
-        label="Add Machinery"
-        icon={<AddIcon />}
+        label="Add User"
+        icon={<PersonAddIcon />}
       />
       <SearchBox value={searchValue} onChange={onSearchChange} />
       <TableBox
         columns={columns}
         sortColumn={sortColumn}
         onSort={onSort}
-        data={lowbeds}
+        data={users}
       />
       <Popup
         openPopup={openPopup}
         setOpenPopup={setOpenPopup}
         setId={setId}
-        title={id ? <span>Edit Machine</span> : <span>Add Machine</span>}
+        title={id ? <span>Edit User</span> : <span>Add User</span>}
       >
-        <LowbedForm
+        <UserForm
           id={id}
           setOpenPopup={setOpenPopup}
           openPopup={openPopup}
@@ -84,24 +83,24 @@ const LowbedsTable = ({
   );
 };
 
-export default LowbedsTable;
+export default UsersTable;
 
-// class LowbedsTable extends Component {
+// class UsersTable extends Component {
 //   columns = [
-//     { path: "licensePlate", label: "License Plate" },
-//     { path: "user.firstName", label: "Lowbed Owner" },
-//     { path: "tyreNo", label: "No. of Tyres" },
-//     { path: "horsePower", label: "Horse Power" },
-//     { path: "manufacturingYear", label: "Year of Manufacturing" },
-//     { path: "madeIn", label: "Made In" },
+//     { path: "firstName", label: "First Name" },
+//     { path: "lastName", label: "Last Name" },
+//     { path: "email", label: "Email" },
+//     { path: "username", label: "Username" },
+//     { path: "userType", label: "User Type" },
+//     { path: "isActivated", label: "Status" },
 //     {
 //       key: "edit",
-//       content: (account) => (
+//       content: (user) => (
 //         <div>
-//           <Link to={`/lowbeds/${account.id}`}>
+//           <Link to={`/users/${user.id}`}>
 //             <EditOutlinedIcon style={{ color: "#f9b115" }} />
 //           </Link>
-//           <Link to={`/lowbeds/${account.id}/details`}>
+//           <Link to={`/users/${user.id}/details`}>
 //             <VisibilityOutlinedIcon style={{ color: "#000" }} />
 //           </Link>
 //         </div>
@@ -110,22 +109,16 @@ export default LowbedsTable;
 //   ];
 
 //   render() {
-//     const { lowbeds, onSort, sortColumn } = this.props;
+//     const { users, onSort, sortColumn } = this.props;
 //     return (
 //       <>
-//         <StyledButton square right>
-//           <LocalShippingOutlinedIcon /> Add Lowbed
-//         </StyledButton>
-//         <SearchBox value={this.searchQuery} onChange={this.handleSearch} />
 //         <Table
 //           columns={this.columns}
 //           sortColumn={sortColumn}
 //           onSort={onSort}
-//           data={lowbeds}
+//           data={users}
 //         />
 //       </>
 //     );
 //   }
 // }
-
-// export default LowbedsTable;

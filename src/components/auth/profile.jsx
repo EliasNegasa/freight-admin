@@ -1,8 +1,8 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Popper from "@material-ui/core/Popper";
-import AvatarImage from "./common/avatar";
-import auth from "../services/authService";
+import AvatarImage from "../common/avatar";
+import auth from "../../services/authService";
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(1),
     backgroundColor: theme.palette.background.paper,
     boxShadow: "2px 2px 18px 4px rgba(0,0,0,0.1)",
+    zIndex: 99999,
   },
 }));
 
@@ -42,8 +43,8 @@ const Profile = ({ user }) => {
             <AvatarImage />
           </div>
           <Popper id={id} open={open} anchorEl={anchorEl}>
-            <div className={classes.paper}>
-              <span onClick={handleLogout}>Logout</span>
+            <div className={classes.paper} onClick={handleLogout}>
+              Logout
             </div>
           </Popper>
         </div>

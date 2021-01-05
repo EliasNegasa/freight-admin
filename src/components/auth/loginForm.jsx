@@ -1,11 +1,11 @@
 import React from "react";
-import { StyledCard } from "./styled-components/card";
-import { StyledSubHeading } from "./styled-components/heading";
-import { Message, StyledFormContainer } from "./styled-components/styledForm";
-import auth from "../services/authService";
-import Form from "./common/form";
-import Spinner from "./common/spinner";
-import BackdropLoader from "./common/Backdrop";
+import BackdropLoader from "../common/Backdrop";
+import Form from "../common/form";
+import { StyledCard } from "../styled-components/card";
+import { StyledSubHeading } from "../styled-components/heading";
+import { Message, StyledFormContainer } from "../styled-components/styledForm";
+
+import auth from "../../services/authService";
 
 const Joi = require("joi-browser");
 

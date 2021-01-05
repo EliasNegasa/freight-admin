@@ -71,6 +71,9 @@ ul.pagination-ul {
 .makeStyles-paper-1 span {
   cursor: pointer;
 }
+.MuiSelect-select.MuiSelect-select {
+    min-width: 100px !important;
+}
   `;
 
 

@@ -8,7 +8,6 @@ export const StyledContainer = styled.div`
     flex-direction: column;
     min-width: 0;
     min-height: 100vh;
-    margin-left: 256px;
 `;
 
 export const StyledContent = styled.div`
@@ -19,7 +18,7 @@ export const StyledContent = styled.div`
 `;
 
 export const StyledSideBar = styled.div`
-    position: fixed;
+    /* position: fixed; */
     top: 0;
     bottom: 0;
     z-index: 1030;
@@ -28,7 +27,7 @@ export const StyledSideBar = styled.div`
     flex: 0 0 256px;
     flex-direction: column;
     order: -1;
-    width: 256px;
+    width: 240px;
     padding: 0;
     box-shadow: none;
     color: #fff;
@@ -53,10 +52,10 @@ export const StyledHeader = styled.div`
     background: #fff;
     border-bottom: 1px solid #d8dbe0;
     border: 0;
-    box-shadow: 0 2px 2px 0 rgba(60,75,100,.14), 0 3px 1px -2px rgba(60,75,100,.12), 0 1px 5px 0 rgba(60,75,100,.2);
+    /* box-shadow: 0 2px 2px 0 rgba(60,75,100,.14), 0 3px 1px -2px rgba(60,75,100,.12), 0 1px 5px 0 rgba(60,75,100,.2); */
 
     & .header-profile {
-        min-width: 200px;
+        /* min-width: 200px; */
         margin-left: auto;
         padding: 10px;
         display: flex;
@@ -64,7 +63,7 @@ export const StyledHeader = styled.div`
     }
 
     & .header-profile div {
-        margin-right: 20px;
+        /* margin-right: 20px; */
     }
     & .user-name {
         margin-top: 6px;
@@ -95,18 +94,25 @@ export const StyledNav = styled.li`
     border-left: 4px solid #ffcd11;
   }
   & .MuiSvgIcon-root {
-    margin-right: 1rem;
+    margin-right: 2rem;
     position: relative;
     top: 5px;
   }
 `;
 
 export const StyledLogo = styled.div`
-  width: 100%;
+  width: 80%;
   height: 56px;
   overflow: hidden;
   background: #252b32;
   padding: 0 0 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  & img {
+    width: 100%;
+    height: auto;
+  }
 `
 
 export const StyledSubContainer = styled.div`
@@ -186,4 +192,5 @@ export const StyledPaginationContainer = styled.div`
 export const StyledChart = styled.div`
   width: 50%;
   min-width: 300px;
+  margin: 0 1rem;
 `

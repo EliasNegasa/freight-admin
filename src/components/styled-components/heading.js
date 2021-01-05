@@ -8,10 +8,13 @@ export const StyledHeading = styled.h2`
 
 export const StyledSubHeading = styled(StyledHeading)`
   font-size: 1.6rem;
+  
 
-  ${props => 
+  ${props =>
     props.left && css`
       text-align: left;
+      font-weight: 400;
+      margin: 0;
     `
   }
 `;

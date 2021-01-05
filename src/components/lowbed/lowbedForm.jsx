@@ -1,5 +1,5 @@
 import React from "react";
-import { getAccounts } from "../../services/accountService";
+import { getUsers } from "../../services/userService";
 import { saveFile } from "../../services/fileService";
 import { getLowbed, saveLowbed } from "../../services/lowbedService";
 import Form from "../common/form";
@@ -7,7 +7,7 @@ import _ from "lodash";
 import Spinner from "../common/spinner";
 import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
-import { filterMachines } from "../../services/machineService";
+import { getMachines } from "../../services/machineService";
 import Notification from "../common/notification";
 import BackdropLoader from "../common/Backdrop";
 
@@ -16,6 +16,7 @@ const Joi = require("joi-browser");
 class LowbedForm extends Form {
   state = {
     data: {
+      name: "",
       licensePlate: "",
       madeIn: "",
       manufacturingYear: "",
@@ -43,6 +44,7 @@ class LowbedForm extends Form {
   };
 
   schema = {
+    name: Joi.string().required().label("Name"),
     licensePlate: Joi.string().required().label("License Plate"),
     madeIn: Joi.string().required().label("Made In"),
     manufacturingYear: Joi.number().required().label("Manufacturing Year"),
@@ -60,8 +62,8 @@ class LowbedForm extends Form {
 
   populateLowbed = async () => {
     try {
-      const lowbedId = this.props.match.params.id;
-      if (lowbedId === "new") {
+      const lowbedId = this.props.id;
+      if (lowbedId === "") {
         this.setState({ loading: false });
         return;
       }
@@ -76,7 +78,7 @@ class LowbedForm extends Form {
 
   async getUserOptions() {
     this.setState({ loading: true });
-    const { data } = await getAccounts();
+    const { data } = await getUsers();
     const options = data.map((d) => ({
       value: d.id,
       label: `${d.firstName} ${d.lastName}`,
@@ -87,7 +89,7 @@ class LowbedForm extends Form {
 
   async getMachineOptions() {
     this.setState({ loading: true });
-    const { data } = await filterMachines("isLowbed=true");
+    const { data } = await getMachines();
     const options = data.map((d) => ({
       value: d.id,
       label: d.name,
@@ -105,6 +107,7 @@ class LowbedForm extends Form {
   mapToViewModel = (lowbed) => {
     return {
       id: lowbed.id,
+      name: lowbed.name,
       licensePlate: lowbed.licensePlate,
       madeIn: lowbed.madeIn,
       manufacturingYear: lowbed.manufacturingYear,
@@ -131,6 +134,7 @@ class LowbedForm extends Form {
 
     const lowbedData = _.pick(data, [
       "id",
+      "name",
       "licensePlate",
       "madeIn",
       "manufacturingYear",
@@ -174,10 +178,14 @@ class LowbedForm extends Form {
       });
 
       console.log("Saved");
-      this.props.history.push("/lowbeds");
+      this.props.setOpenPopup(false);
+      this.props.setId("");
+      this.props.onUpdated();
+
+      // this.props.history.push("/lowbeds");
     } catch (ex) {
       if (ex.response && ex.response.status !== 200) {
-        const { error } = ex.response.data;
+        const error = ex.response.data;
         this.setState({
           message: error.message,
           messageType: "danger",
@@ -202,22 +210,19 @@ class LowbedForm extends Form {
         {loading && <Spinner />}
         {!loading && (
           <>
-            {message && (
+            {message && this.props.openPopup && (
               <Notification
                 title={messageTitle}
                 message={message}
                 type={messageType}
               />
             )}
-            <StyledSubHeading left>
-              {this.state.data.id ? <span>Edit </span> : <span>Add </span>}
-              Lowbed
-            </StyledSubHeading>
 
             <form onSubmit={this.handleSubmit}>
               {this.state.loading && <Spinner />}
               <StyledFormContainer>
-                <strong>Lowbed Information:</strong>
+                <strong>Machine Information:</strong>
+                {this.renderInput("name", "Name")}
                 {this.renderInput("licensePlate", "License Plate")}
                 {this.renderInput("madeIn", "Made in")}
                 {this.renderInput("manufacturingYear", "Manufacturing Year")}
@@ -245,7 +250,7 @@ class LowbedForm extends Form {
                 </div>
                 <div className="double-field">
                   {this.renderInput("length", "Length (m)", "number")}
-                  {this.renderInput("tyreNo", "Number of Tyre", "number")}
+                  {this.renderInput("tyreNo", "No. of Tyre", "number")}
                 </div>
                 {this.renderPreloadedSelect(
                   "userId",

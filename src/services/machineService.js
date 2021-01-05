@@ -1,10 +1,10 @@
 import http from "./httpService";
-import { apiUrl } from "../config.json";
+import { apiUrl, limit } from "../config.json";
 
 const apiEndpoint = `${apiUrl}/api/machines`;
 
 export function getMachines() {
-  return http.get(apiEndpoint);
+  return http.get(`${apiEndpoint}/${limit}`);
 }
 
 export function getMachine(machineId) {

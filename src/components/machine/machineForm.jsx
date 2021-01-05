@@ -1,6 +1,9 @@
 import React from "react";
 import { getMachine, saveMachine } from "../../services/machineService";
+import BackdropLoader from "../common/Backdrop";
 import Form from "../common/form";
+import Notification from "../common/notification";
+import Spinner from "../common/spinner";
 import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
 
@@ -15,6 +18,9 @@ class MachineForm extends Form {
       file: "",
     },
     errors: {},
+    loading: false,
+    backdrop: false,
+    message: "",
   };
 
   schema = {
@@ -25,8 +31,8 @@ class MachineForm extends Form {
 
   populateMachine = async () => {
     try {
-      const machineId = this.props.match.params.id;
-      if (machineId === "new") return;
+      const machineId = this.props.id;
+      if (machineId === "") return;
 
       const { data: machine } = await getMachine(machineId);
 
@@ -65,25 +71,49 @@ class MachineForm extends Form {
     const data = this.mapToFormData(this.state.data);
     await saveMachine(data);
     console.log("Saved");
-    this.props.history.push("/machines");
+    this.props.setOpenPopup(false);
+    this.props.setId("");
+    this.props.onUpdated();
+    // this.props.history.push("/machines");
   };
 
   render() {
+    const {
+      backdrop,
+      loading,
+      message,
+      messageType,
+      messageTitle,
+    } = this.state;
     return (
-      <div>
-        <StyledSubHeading left>
-          {this.state.data.id ? <span>Edit </span> : <span>Add </span>} Machine
-        </StyledSubHeading>
-        <form onSubmit={this.handleSubmit}>
-          <StyledFormContainer>
-            {this.renderInput("name", "Machine Name")}
-            {this.renderTextArea("description", "Description")}
-            {this.renderCheckBox("isLowbed", "Lowbed")}
-            {this.renderFileUpload("file", "Upload Picture")}
-            {this.renderButton("Save")}
-          </StyledFormContainer>
-        </form>
-      </div>
+      <>
+        {backdrop && <BackdropLoader />}
+        {loading && <Spinner />}
+        {!loading && (
+          <>
+            {message && this.props.openPopup && (
+              <Notification
+                title={messageTitle}
+                message={message}
+                type={messageType}
+              />
+            )}
+            <StyledFormContainer oneColumn>
+              <div className="login-form">
+                <form onSubmit={this.handleSubmit}>
+                  {this.renderInput("name", "Machine Name")}
+                  {this.renderTextArea("description", "Description")}
+                  {this.renderCheckBox("isLowbed", "Lowbed")}
+                  {this.renderFileUpload("file", "Upload Picture")}
+                  <div style={{ margin: "3px 30px 15px auto" }}>
+                    {this.renderButton("Save")}
+                  </div>
+                </form>
+              </div>
+            </StyledFormContainer>
+          </>
+        )}
+      </>
     );
   }
 }

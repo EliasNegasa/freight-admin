@@ -1,15 +1,15 @@
 import React from "react";
 import _ from "lodash";
-import { filterAccounts } from "../../services/accountService";
+import { filterUsers } from "../../services/userService";
 import { filterJobs } from "../../services/jobService";
 import { getRequest, saveRequest } from "../../services/requestService";
 import Form from "../common/form";
 import { getLowbed } from "../../services/lowbedService";
 import Spinner from "../common/spinner";
-import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
 import BackdropLoader from "../common/Backdrop";
 import Notification from "../common/notification";
+import AsynchronousSelect from "../common/autoComplete";
 
 const Joi = require("joi-browser");
 
@@ -24,7 +24,7 @@ class RequestForm extends Form {
     userSelectOptions: [],
     jobSelectOptions: [],
     lowbedSelectOptions: [],
-    statusOptions: ["Open", "Closed", "Pending"],
+    statusOptions: ["accepted", "pending", "cancelled"],
     errors: {},
     loading: false,
     backdrop: false,
@@ -37,7 +37,7 @@ class RequestForm extends Form {
 
   populateRequest = async () => {
     try {
-      const requestId = this.props.match.params.id;
+      const requestId = this.props.id;
       if (requestId === "new") {
         this.setState({ loading: false });
         return;
@@ -53,7 +53,7 @@ class RequestForm extends Form {
 
   async getUserOptions() {
     this.setState({ loading: true });
-    const { data } = await filterAccounts("userType=Lowbeds Owner");
+    const { data } = await filterUsers("userType=Lowbed Owner");
     const options = data.map((d) => ({
       value: d.id,
       label: `${d.firstName} ${d.lastName}`,
@@ -118,10 +118,13 @@ class RequestForm extends Form {
         backdrop: false,
       });
       console.log("Saved");
-      this.props.history.push("/requests");
+      this.props.setOpenPopup(false);
+      this.props.setId("");
+      this.props.onUpdated();
+      // this.props.history.push("/requests");
     } catch (ex) {
       if (ex.response && ex.response.status !== 200) {
-        const { error } = ex.response.data;
+        const error = ex.response.data;
         this.setState({
           message: error.message,
           messageType: "danger",
@@ -146,43 +149,41 @@ class RequestForm extends Form {
         {loading && <Spinner />}
         {!loading && (
           <>
-            {message && (
+            {message && this.props.openPopup && (
               <Notification
                 title={messageTitle}
                 message={message}
                 type={messageType}
               />
             )}
-            <StyledSubHeading left>
-              {this.state.data.id ? <span>Edit </span> : <span>Add </span>}
-              Request
-            </StyledSubHeading>
-            <form onSubmit={this.handleSubmit}>
-              {loading && <Spinner />}
-              <StyledFormContainer>
-                {this.renderPreloadedSelect(
-                  "userId",
-                  "Requester",
-                  this.state.userSelectOptions
-                )}
-                {this.renderPreloadedSelect(
-                  "jobId",
-                  "Job",
-                  this.state.jobSelectOptions
-                )}
-                {this.renderPreloadedSelect(
-                  "lowbedId",
-                  "Lowbed",
-                  this.state.lowbedSelectOptions
-                )}
-                {this.renderSelect(
-                  "status",
-                  "Status",
-                  this.state.statusOptions
-                )}
-              </StyledFormContainer>
-              {this.renderButton("Save")}
-            </form>
+            <StyledFormContainer oneColumn>
+              <div className="login-form">
+                <form onSubmit={this.handleSubmit}>
+                  {loading && <Spinner />}
+                  {this.renderPreloadedSelect(
+                    "userId",
+                    "Requester",
+                    this.state.userSelectOptions
+                  )}
+                  {this.renderPreloadedSelect(
+                    "jobId",
+                    "Job",
+                    this.state.jobSelectOptions
+                  )}
+                  {this.renderPreloadedSelect(
+                    "lowbedId",
+                    "Lowbed",
+                    this.state.lowbedSelectOptions
+                  )}
+                  {this.renderSelect(
+                    "status",
+                    "Status",
+                    this.state.statusOptions
+                  )}
+                  {this.renderButton("Save")}
+                </form>
+              </div>
+            </StyledFormContainer>
           </>
         )}
       </>

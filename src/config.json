@@ -1,3 +1,4 @@
 {
-"apiUrl": "https://machinery-api.herokuapp.com"
+  "apiUrl": "https://machinery-api.herokuapp.com",
+  "limit": "limit=5000"
 }

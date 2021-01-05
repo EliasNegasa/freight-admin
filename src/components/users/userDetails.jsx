@@ -2,11 +2,11 @@ import React from "react";
 import { StyledSubHeading } from "../styled-components/heading";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-import AccountPersonalDetails from "../account/accountPersonalDetails";
-import AccountJobDetails from "../account/accountJobDetails";
-import AccountRequestDetails from "../account/accountRequestDetails";
+import UserPersonalDetails from "../users/userPersonalDetails";
+import UserJobDetails from "../users/userJobDetails";
+import UserRequestDetails from "../users/userRequestDetails";
 
-const AccountDetails = (props) => {
+const UserDetails = (props) => {
   const { match, history } = props;
   const { params } = match;
   const { tabUrl, id } = params;
@@ -26,24 +26,24 @@ const AccountDetails = (props) => {
   const [selectedTab, setSelectedtab] = React.useState(indexToTabName[tabUrl]);
 
   const handleChange = (event, newValue) => {
-    history.push(`/accounts/${id}/details/${tabNameToIndex[newValue]}`);
+    history.push(`/users/${id}/details/${tabNameToIndex[newValue]}`);
     setSelectedtab(newValue);
   };
 
   return (
     <>
-      <StyledSubHeading left>Account Details</StyledSubHeading>
+      <StyledSubHeading left>User Details</StyledSubHeading>
 
       <Tabs value={selectedTab} onChange={handleChange}>
         <Tab label="Details" />
         <Tab label="Jobs" />
         <Tab label="Requests" />
       </Tabs>
-      {selectedTab === 0 && <AccountPersonalDetails id={id} />}
-      {selectedTab === 1 && <AccountJobDetails id={id} />}
-      {selectedTab === 2 && <AccountRequestDetails id={id} />}
+      {selectedTab === 0 && <UserPersonalDetails id={id} />}
+      {selectedTab === 1 && <UserJobDetails id={id} />}
+      {selectedTab === 2 && <UserRequestDetails id={id} />}
     </>
   );
 };
 
-export default AccountDetails;
+export default UserDetails;

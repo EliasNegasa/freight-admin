@@ -1,32 +1,29 @@
 import http from "./httpService";
-import { apiUrl } from "../config.json";
+import { apiUrl, limit } from "../config.json";
 
-const apiEndpoint = `${apiUrl}/api/users`;
+const apiEndpoint = `${apiUrl}/api/payments`;
 
 // http.setContentType('application/json');
 
 export function getAccounts() {
-  return http.get(apiEndpoint);
+    return http.get(`${apiEndpoint}/${limit}`);
 }
 
 export function getAccount(accountId) {
-  return http.get(`${apiEndpoint}/${accountId}`);
+    return http.get(`${apiEndpoint}/${accountId}`);
 }
 
 export function saveAccount(account) {
-  if (account.id) {
-    return http.put(apiEndpoint, account);
-  }
-  // const password = "password@app";
-  // account.append('password', password);
-  account.password = account.firstName.substring(0, 1).toUpperCase() + account.lastName.substring(0, 1) + "@app"
-  return http.post(apiEndpoint, account);
+    if (account.id) {
+        return http.put(`${apiEndpoint}/recharge`, account);
+    }
+    return http.post(apiEndpoint, account);
 }
 
 export function deleteAccount(accountId) {
-  return http.delete(`${apiEndpoint}/${accountId}`);
+    return http.delete(`${apiEndpoint}/${accountId}`);
 }
 
 export function filterAccounts(query) {
-  return http.get(`${apiEndpoint}/${query}`);
+    return http.get(`${apiEndpoint}/${query}`);
 }

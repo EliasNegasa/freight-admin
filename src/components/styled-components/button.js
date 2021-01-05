@@ -5,7 +5,6 @@ export const StyledButton = styled.button`
   padding: 12px 0;
   margin: 2rem 0 0;
   width: 200px;
-  font-weight: 700;
   color: ${(props) => props.theme.secondary} !important;
   background-color: ${(props) => props.theme.primary};
   border: 1px solid ${(props) => props.theme.primary};
@@ -26,7 +25,11 @@ export const StyledButton = styled.button`
     css`
       border-radius: 0;
       width: fit-content;
-      padding: 9px 20px 12px;
+      padding: 3px 12px 9px;
+      text-transform: uppercase;
+      & .MuiSvgIcon-root {
+        margin-right: 0 !important;
+      }
     `}
 
     ${(props) =>
@@ -48,6 +51,12 @@ export const StyledButton = styled.button`
       & .MuiSvgIcon-root {
         color: white;
       }
+    `}
+
+    ${(props) =>
+    props.noIcon &&
+    css`
+      padding: 10px 20px 10px;
     `}
 
     ${(props) =>

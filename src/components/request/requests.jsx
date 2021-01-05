@@ -3,10 +3,6 @@ import { getRequests } from "../../services/requestService";
 import { paginate } from "../../utils/paginate";
 import _ from "lodash";
 import { StyledSubHeading } from "../styled-components/heading";
-import { StyledButton } from "../styled-components/button";
-import SearchBox from "../common/searchBox";
-import PersonAddIcon from "@material-ui/icons/PersonAdd";
-import { Link } from "react-router-dom";
 import Spinner from "../common/spinner";
 import RequestsTable from "./requestsTable";
 import Pagination from "../common/pagination";
@@ -20,6 +16,7 @@ class Requests extends Component {
     searchQuery: "",
     sortColumn: { path: "userId", order: "asc" },
     loading: false,
+    isUpdated: false,
   };
 
   async componentDidMount() {
@@ -28,6 +25,19 @@ class Requests extends Component {
     console.log("Request DATA", requests);
     this.setState({ requests, loading: false });
   }
+
+  async componentDidUpdate(prevProps, prevState) {
+    if (prevState.isUpdated !== this.state.isUpdated) {
+      this.setState({ loading: true });
+      const { data: requests } = await getRequests();
+      console.log("Request DATA", requests);
+      this.setState({ requests, loading: false, isUpdated: false });
+    }
+  }
+
+  handleIsUpdated = () => {
+    this.setState({ isUpdated: true });
+  };
 
   handlePageChange = (page) => {
     this.setState({ currentPage: page });
@@ -58,7 +68,7 @@ class Requests extends Component {
             .toLowerCase()
             .startsWith(searchQuery.toLowerCase()) ||
           r.job.title.toLowerCase().startsWith(searchQuery.toLowerCase()) ||
-          r.job.userId.startsWith(searchQuery.toLowerCase()) ||
+          // r.job.userId.startsWith(searchQuery.toLowerCase()) ||
           r.job.lowbed.licensePlate
             .toLowerCase()
             .startsWith(searchQuery.toLowerCase())
@@ -78,18 +88,14 @@ class Requests extends Component {
     return (
       <>
         <StyledSubHeading left>Requests</StyledSubHeading>
-        <StyledButton square right>
-          <PersonAddIcon />
-          <Link to="/requests/new">Add Request</Link>
-        </StyledButton>
-        <SearchBox value={this.searchQuery} onChange={this.handleSearch} />
 
         <RequestsTable
           requests={requests}
           sortColumn={sortColumn}
-          onDelete={this.handleDelete}
-          onLike={this.handleLike}
           onSort={this.handleSort}
+          onSearchChange={this.handleSearch}
+          searchValue={this.searchQuery}
+          onUpdated={this.handleIsUpdated}
         />
         {loading && <Spinner />}
 

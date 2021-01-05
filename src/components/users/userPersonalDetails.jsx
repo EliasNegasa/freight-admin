@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { getAccount, saveAccount } from "../../services/accountService";
 import AvatarImage from "../common/avatar";
 import DetailTable from "../common/detailTable";
 import { StyledButton } from "../styled-components/button";
@@ -11,8 +10,9 @@ import DoneAllOutlinedIcon from "@material-ui/icons/DoneAllOutlined";
 import ClearIcon from "@material-ui/icons/Clear";
 import Spinner from "../common/spinner";
 import { filterLowbeds } from "../../services/lowbedService";
+import { getUser, saveUser } from "../../services/userService";
 
-class AccountPersonalDetails extends Component {
+class UserPersonalDetails extends Component {
   rows = {
     personalRow: [
       { cell: "email", label: "Email" },
@@ -35,7 +35,7 @@ class AccountPersonalDetails extends Component {
   };
 
   state = {
-    account: {},
+    user: {},
     address: {},
     lowbeds: [],
     loading: false,
@@ -43,47 +43,47 @@ class AccountPersonalDetails extends Component {
 
   async componentDidMount() {
     this.setState({ loading: true });
-    const { data: account } = await getAccount(this.props.id);
+    const { data: user } = await getUser(this.props.id);
     const { data: lowbeds } = await filterLowbeds(`userId=${this.props.id}`);
     this.setState({
-      account,
-      address: account.address,
+      user,
+      address: user.address,
       lowbeds,
       loading: false,
     });
   }
 
   handleActivate = async () => {
-    const account = { ...this.state.account };
+    const user = { ...this.state.user };
 
-    const { data } = await saveAccount({
-      id: account.id,
-      isActivated: !account.isActivated,
+    const { data } = await saveUser({
+      id: user.id,
+      isActivated: !user.isActivated,
     });
-    this.setState({ account: data.result });
-    console.log("Activated", this.state.account);
+    this.setState({ user: data.result });
+    console.log("Activated", this.state.user);
   };
 
   handleDelete = async () => {
-    const account = { ...this.state.account };
+    const user = { ...this.state.user };
 
-    const { data } = await saveAccount({
-      id: account.id,
-      deleted: !account.deleted,
+    const { data } = await saveUser({
+      id: user.id,
+      deleted: !user.deleted,
     });
-    this.setState({ account: data.result });
-    console.log("Deleted", this.state.account);
+    this.setState({ user: data.result });
+    console.log("Deleted", this.state.user);
   };
 
   render() {
-    const { account, lowbeds, loading } = this.state;
+    const { user, lowbeds, loading } = this.state;
     return (
       <>
         {loading && <Spinner />}
         {!loading && (
           <>
             <StyledFlex smallWidth right>
-              {!account.isActivated ? (
+              {!user.isActivated ? (
                 <StyledButton
                   square
                   right
@@ -106,7 +106,7 @@ class AccountPersonalDetails extends Component {
               )}
               <StyledButton square right danger onClick={this.handleDelete}>
                 <DeleteForeverOutlinedIcon />
-                Delete Account
+                Delete User
               </StyledButton>
             </StyledFlex>
 
@@ -114,24 +114,24 @@ class AccountPersonalDetails extends Component {
             <StyledFlex>
               <StyledCard big left smallShadow>
                 <div style={{ textAlign: "center" }}>
-                  {account && (
+                  {user && (
                     <AvatarImage
-                      alt={account.firstName}
-                      src={account.picture ? account.picture.filePath : "#"}
+                      alt={user.firstName}
+                      src={user.picture ? user.picture.filePath : "#"}
                       styleClass="large"
                     />
                   )}
                   <strong>
-                    {account.firstName} {account.lastName}
+                    {user.firstName} {user.lastName}
                     <br />
                     <small style={{ color: "rgba(52, 49, 76, 0.54)" }}>
-                      {account.userType}
+                      {user.userType}
                     </small>
                   </strong>
                 </div>
 
-                {account && (
-                  <DetailTable data={account} rows={this.rows.personalRow} />
+                {user && (
+                  <DetailTable data={user} rows={this.rows.personalRow} />
                 )}
               </StyledCard>
               <StyledCard big left smallShadow>
@@ -139,9 +139,9 @@ class AccountPersonalDetails extends Component {
                   <strong>Address Information</strong>
                 </div>
 
-                {account && account.address && (
+                {user && user.address && (
                   <DetailTable
-                    data={account.address}
+                    data={user.address}
                     rows={this.rows.addressRow}
                   />
                 )}
@@ -171,4 +171,4 @@ class AccountPersonalDetails extends Component {
   }
 }
 
-export default AccountPersonalDetails;
+export default UserPersonalDetails;

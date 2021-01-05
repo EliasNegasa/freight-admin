@@ -122,7 +122,12 @@ export const StyledFormContainer = styled.div`
   & .double-field {
     width: 100%;
     display: flex;
-    justify-content: space-between;    
+    justify-content: space-between;  
+
+    & .field-div {
+    width: 50%;
+    margin: 0 30px 15px 0;
+    }  
   }
   & .login-form .field-div {
     margin-left: auto;

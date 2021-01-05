@@ -1,8 +1,7 @@
 import React from "react";
 import _ from "lodash";
-import { getAccount, saveAccount } from "../../services/accountService";
+import { getUser, saveUser } from "../../services/userService";
 import Form from "../common/form";
-import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
 import Spinner from "../common/spinner";
 import { saveFile } from "../../services/fileService";
@@ -12,7 +11,7 @@ import BackdropLoader from "../common/Backdrop";
 
 const Joi = require("joi-browser");
 
-class AccountForm extends Form {
+class UserForm extends Form {
   state = {
     data: {
       firstName: "",
@@ -32,7 +31,7 @@ class AccountForm extends Form {
       companyPhone: "",
       picture: "",
     },
-    userType: ["Machinery Owner", "Lowbeds Owner", "Admin"],
+    userType: ["Machinery Owner", "Lowbed Owner", "Admin"],
     errors: {},
     loading: false,
     backdrop: false,
@@ -56,59 +55,49 @@ class AccountForm extends Form {
     companyPhone: Joi.number().label("Company Phone"),
   };
 
-  populateAccount = async () => {
+  populateUser = async () => {
     try {
-      const accountId = this.props.match.params.id;
-      if (accountId === "new") return;
+      // const userId = this.props.match.params.id;
+      const userId = this.props.id;
+      if (userId === "") return;
 
       this.setState({ loading: true });
-      const { data: account } = await getAccount(accountId);
+      const { data: user } = await getUser(userId);
 
-      this.setState({ data: this.mapToViewModel(account), loading: false });
+      this.setState({ data: this.mapToViewModel(user), loading: false });
     } catch (ex) {
       this.props.history.replace("/not-found");
     }
   };
 
   async componentDidMount() {
-    await this.populateAccount();
+    await this.populateUser();
   }
 
-  mapToViewModel = (account) => {
+  mapToViewModel = (user) => {
     return {
-      id: account.id,
-      firstName: account.firstName,
-      lastName: account.lastName,
-      email: account.email,
-      username: account.username,
-      phone: account.phone,
-      userType: account.userType,
-      role: account.role,
-      file: account.file,
-      addressId: account.address ? account.address.id : undefined,
-      kebele: account.address ? account.address.kebele : undefined,
-      woreda: account.address ? account.address.woreda : undefined,
-      zone: account.address ? account.address.zone : undefined,
-      city: account.address ? account.address.city : undefined,
-      company: account.address ? account.address.company : "",
-      companyPhone: account.address ? account.address.phone : undefined,
-      picture: account.picture ? account.picture : undefined,
+      id: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      username: user.username,
+      phone: user.phone,
+      userType: user.userType,
+      role: user.role,
+      file: user.file,
+      addressId: user.address ? user.address.id : undefined,
+      kebele: user.address ? user.address.kebele : undefined,
+      woreda: user.address ? user.address.woreda : undefined,
+      zone: user.address ? user.address.zone : undefined,
+      city: user.address ? user.address.city : undefined,
+      company: user.address ? user.address.company : "",
+      companyPhone: user.address ? user.address.phone : undefined,
+      picture: user.picture ? user.picture : undefined,
     };
   };
 
-  // appendToFormData = (jsonAccount) => {
-  //   const formData = new FormData();
-
-  //   Object.keys(jsonAccount).forEach((key) => {
-  //     formData.append(key, jsonAccount[key]);
-  //   });
-
-  //   return formData;
-  // };
-
   doSubmit = async () => {
     const data = { ...this.state.data };
-
     console.log("Data", data);
 
     const {
@@ -143,8 +132,8 @@ class AccountForm extends Form {
     };
     this.setState({ backdrop: true });
     try {
-      const { data: account } = await saveAccount(userData);
-      const userId = account.id ? account.id : account.result.id;
+      const { data: user } = await saveUser(userData);
+      const userId = user.id ? user.id : user.result.id;
 
       if (data.file) {
         const fileObj = _.pick(data, ["file"]);
@@ -156,7 +145,7 @@ class AccountForm extends Form {
         console.log(await saveFile(formData, "users"));
       }
       this.setState({
-        message: account.result
+        message: user.result
           ? "User data updated Successfully"
           : "User created Successfully",
         messageType: "success",
@@ -164,10 +153,15 @@ class AccountForm extends Form {
         backdrop: false,
       });
       console.log("Saved");
-      this.props.history.push("/accounts");
+
+      this.props.setOpenPopup(false);
+      this.props.setId("");
+      this.props.onUpdated();
+      // this.props.history.push("/users");
+      // this.props.history.push(this.props.location);
     } catch (ex) {
       if (ex.response && ex.response.status !== 200) {
-        const { error } = ex.response.data;
+        const error = ex.response.data;
         this.setState({
           message: error.message,
           messageType: "danger",
@@ -193,17 +187,14 @@ class AccountForm extends Form {
         {loading && <Spinner />}
         {!loading && (
           <>
-            {message && (
+            {message && this.props.openPopup && (
               <Notification
                 title={messageTitle}
                 message={message}
                 type={messageType}
               />
             )}
-            <StyledSubHeading left>
-              {this.state.data.id ? <span>Edit </span> : <span>Add </span>}
-              Account
-            </StyledSubHeading>
+
             <form onSubmit={this.handleSubmit}>
               <StyledFormContainer>
                 <strong>Personal Information:</strong>
@@ -214,7 +205,7 @@ class AccountForm extends Form {
                 {this.renderInput("phone", "Phone No.")}
                 {this.renderSelect(
                   "userType",
-                  "Account Type",
+                  "User Type",
                   this.state.userType
                 )}
                 {data.picture && (
@@ -246,4 +237,4 @@ class AccountForm extends Form {
   }
 }
 
-export default AccountForm;
+export default UserForm;
