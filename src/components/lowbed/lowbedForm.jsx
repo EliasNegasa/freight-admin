@@ -5,7 +5,6 @@ import { getLowbed, saveLowbed } from "../../services/lowbedService";
 import Form from "../common/form";
 import _ from "lodash";
 import Spinner from "../common/spinner";
-import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
 import { getMachines } from "../../services/machineService";
 import Notification from "../common/notification";

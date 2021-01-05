@@ -33,7 +33,6 @@ class AddressForm extends Form {
   populateAddress = async () => {
     try {
       const jobId = this.props.id;
-      console.log("IDDDDD", jobId);
       if (jobId === "") {
         this.setState({ loading: false });
         return;
@@ -83,12 +82,10 @@ class AddressForm extends Form {
       long: dropOffLong,
     };
 
-    console.log("TEST", jobData);
     this.setState({ backdrop: true });
 
     try {
       const { data: job } = await saveJob(jobData);
-      console.log("RESPONSE", job);
 
       this.setState({
         message: "Job Address updated Successfully",

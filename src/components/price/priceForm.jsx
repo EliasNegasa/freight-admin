@@ -1,7 +1,6 @@
 import React from "react";
 import { getPrice, savePrice } from "../../services/priceService";
 import Form from "../common/form";
-import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
 
 const Joi = require("joi-browser");

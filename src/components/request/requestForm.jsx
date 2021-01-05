@@ -9,7 +9,6 @@ import Spinner from "../common/spinner";
 import { StyledFormContainer } from "../styled-components/styledForm";
 import BackdropLoader from "../common/Backdrop";
 import Notification from "../common/notification";
-import AsynchronousSelect from "../common/autoComplete";
 
 const Joi = require("joi-browser");
 

@@ -9,6 +9,7 @@ import SearchBox from "../common/searchBox";
 import TableBox from "../common/table";
 import AccountForm from "./accountForm";
 import ActionButton from "../common/button";
+import EvStationIcon from "@material-ui/icons/EvStation";
 
 const AccountsTable = ({
   accounts,
@@ -34,7 +35,7 @@ const AccountsTable = ({
             style={{ cursor: "pointer" }}
             onClick={() => handleClickOpen(account.id)}
           >
-            <EditOutlinedIcon style={{ color: "#f9b115" }} />
+            <EvStationIcon style={{ color: "#f9b115" }} />
           </Link>
           <Link to={`/accounts/${account.id}/details`}>
             <VisibilityOutlinedIcon style={{ color: "#000" }} />

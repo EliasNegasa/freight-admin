@@ -165,7 +165,8 @@ class Form extends Component {
         options={options}
         placeholder={label}
         onChange={(e) => this.handlePreloadedSelectChange(e, name)}
-        setValue={data[name] ? data[name] : undefined}
+        // setValue={data[name] ? data[name] : undefined}
+        value={data[name]}
       />
     );
   };

@@ -1,12 +1,10 @@
 import React from "react";
-import _ from "lodash";
-import { getUser, getUsers } from "../../services/userService";
+import { getUsers } from "../../services/userService";
 import Form from "../common/form";
 import { StyledFormContainer } from "../styled-components/styledForm";
 import Spinner from "../common/spinner";
 import Notification from "../common/notification";
 import BackdropLoader from "../common/Backdrop";
-
 import { getAccount, saveAccount } from "../../services/accountService";
 
 const Joi = require("joi-browser");
@@ -114,6 +112,7 @@ class AccountForm extends Form {
     } = this.state;
     return (
       <>
+        {console.log("USERS", this.state.userSelectOptions)}
         {backdrop && <BackdropLoader />}
         {loading && <Spinner />}
         {!loading && (

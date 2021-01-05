@@ -62,13 +62,11 @@ class Account extends Component {
     if (searchQuery)
       filtered = allAccounts.filter(
         (account) =>
-          account.firstName
+          account.user.firstName
             .toLowerCase()
-            .startsWith(searchQuery.toLowerCase()) ||
-          account.lastName
-            .toLowerCase()
-            .startsWith(searchQuery.toLowerCase()) ||
-          account.email.toLowerCase().startsWith(searchQuery.toLowerCase())
+            .startsWith(searchQuery.toLowerCase())
+          // account.balance.startsWith(searchQuery.toLowerCase()) 
+          // account.totalDeposit.toLowerCase().startsWith(searchQuery.toLowerCase())
       );
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);

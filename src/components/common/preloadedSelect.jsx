@@ -1,7 +1,14 @@
 import React from "react";
 import Select from "react-select";
+import _ from "lodash";
 
-const PreloadedSelect = ({ placeholder, options, ...rest }) => {
+const getIndex = (options, value) => {
+  return _.findIndex(options, function (option) {
+    return option.value == value;
+  });
+};
+
+const PreloadedSelect = ({ placeholder, options, value, ...rest }) => {
   return (
     <>
       <div className="field-div">
@@ -9,13 +16,10 @@ const PreloadedSelect = ({ placeholder, options, ...rest }) => {
           options={options}
           placeholder={`Select ${placeholder}`}
           {...rest}
+          value={options ? options[getIndex(options, value)] : ""}
+          // selectValue={options ? options[getIndex(options, value)] : ""}
         />
       </div>
-      {/* <AsyncSelect
-          cacheOptions
-          defaultOptions
-          loadOptions={this.state.selectOptions}
-        /> */}
     </>
   );
 };

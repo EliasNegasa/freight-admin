@@ -2,7 +2,6 @@ import React from "react";
 import { Link } from "react-router-dom";
 import EditOutlinedIcon from "@material-ui/icons/EditOutlined";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
-import { StyledButton } from "../styled-components/button";
 import SearchBox from "../common/searchBox";
 import AddIcon from "@material-ui/icons/Add";
 import { useState } from "react";

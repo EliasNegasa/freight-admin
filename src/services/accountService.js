@@ -16,6 +16,7 @@ export function getAccount(accountId) {
 export function saveAccount(account) {
     if (account.id) {
         return http.put(`${apiEndpoint}/recharge`, account);
+        // return http.put(`${apiEndpoint}`, account);
     }
     return http.post(apiEndpoint, account);
 }

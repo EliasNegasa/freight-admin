@@ -107,12 +107,12 @@ const JobsTable = ({
 
 export default JobsTable;
 
-{
+
   /* <StyledButton square right onClick={() => setOpenPopup(true)}>
         <PersonAddIcon />
         Add Job
       </StyledButton> */
-}
+
 
 // class JobsTable extends Component {
 //   columns = [

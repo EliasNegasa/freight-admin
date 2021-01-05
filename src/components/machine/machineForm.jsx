@@ -4,7 +4,6 @@ import BackdropLoader from "../common/Backdrop";
 import Form from "../common/form";
 import Notification from "../common/notification";
 import Spinner from "../common/spinner";
-import { StyledSubHeading } from "../styled-components/heading";
 import { StyledFormContainer } from "../styled-components/styledForm";
 
 const Joi = require("joi-browser");
