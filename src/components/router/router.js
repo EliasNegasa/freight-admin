@@ -19,6 +19,7 @@ import UserForm from '../users/userForm';
 import Users from '../users/users';
 import AccountForm from '../accounts/accountForm';
 import Account from '../accounts/account';
+import LocationTracker from '../map/tracker/mapContainer';
 
 const Router = () => {
     return (
@@ -43,6 +44,8 @@ const Router = () => {
             <Route path='/payments/:id' component={AccountForm} />
             <Route path='/payments' component={Account} />
             <Route path="/logout" component={LoginForm} />
+
+            <Route path="/tracker" component={LocationTracker} />
 
             <Route path="/dashboard" component={Home} />
             <Redirect from="/" to="/dashboard" />

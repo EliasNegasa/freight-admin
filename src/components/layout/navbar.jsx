@@ -8,6 +8,7 @@ import LocalShippingOutlinedIcon from "@material-ui/icons/LocalShippingOutlined"
 import SpeakerNotesOutlinedIcon from "@material-ui/icons/SpeakerNotesOutlined";
 import PermDataSettingOutlinedIcon from "@material-ui/icons/PermDataSettingOutlined";
 import MonetizationOnOutlinedIcon from "@material-ui/icons/MonetizationOnOutlined";
+import RoomIcon from '@material-ui/icons/Room';
 import CreditCardIcon from "@material-ui/icons/CreditCard";
 import { makeStyles } from "@material-ui/core";
 
@@ -60,6 +61,11 @@ const NavBar = () => {
       <StyledNav>
         <NavLink className="nav-link" to="/machines">
           <PermDataSettingOutlinedIcon className={classes.navIcon} /> Machines
+        </NavLink>
+      </StyledNav>
+      <StyledNav>
+        <NavLink className="nav-link" to="/tracker">
+          <RoomIcon className={classes.navIcon} /> Track on Map
         </NavLink>
       </StyledNav>
     </ul>

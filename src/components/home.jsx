@@ -71,6 +71,7 @@ class Home extends Component {
             <BarChart />
           </StyledChart>
         </StyledFlex>
+        <a href="mailto:elias.negasa@mmcytech.com?subject=Testing out mailto!&body=This is only a test!">Second Example</a>
       </>
     );
   }

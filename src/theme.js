@@ -74,6 +74,9 @@ ul.pagination-ul {
 .MuiSelect-select.MuiSelect-select {
     min-width: 100px !important;
 }
+.leaflet-container {
+  height: calc(100vh - 150px);
+}
   `;
 
 

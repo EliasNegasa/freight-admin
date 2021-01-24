@@ -8,7 +8,6 @@ import ReactNotification from 'react-notifications-component'
 import 'react-notifications-component/dist/theme.css'
 import BoxContainer from "./components/layout/box";
 
-
 class App extends Component {
   state = {};
 
